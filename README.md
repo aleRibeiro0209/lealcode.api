@@ -42,7 +42,7 @@ A estrutura do projeto é baseada na arquitetura MVC, organizada da seguinte for
 
 1. Clone o repositório:
     ```bash
-    git clone https://github.com/seu-usuario/lealcode.api.git
+    git clone https://github.com/aleRibeiro0209/lealcode.api.git
     ```
 
 2. Acesse o diretório do projeto:
