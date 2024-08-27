@@ -1,0 +1,6 @@
+# Arquivos
+.env
+composer.lock
+
+# Pastas
+vendor/
