@@ -23,10 +23,18 @@ A estrutura do projeto é baseada na arquitetura MVC, organizada da seguinte for
 - **App/Controllers**:
   - `Veiculos.php`: Controlador para gerenciar as operações relacionadas aos veículos.
   - `Carrocerias.php`: Controlador para gerenciar as operações relacionadas às carrocerias.
+  - `Cargos.php`: Controlador para gerenciar as operações relacionadas aos cargos.
+  - `Funcionarios.php`: Controlador para gerenciar as operações relacionadas aos funcionários.
+  - `Logins.php`: Controlador responsável pelas operações de autenticação e login.
 
 - **App/Models**:
   - `Veiculo.php`: Modelo que representa a tabela de veículos no banco de dados.
   - `Carroceria.php`: Modelo que representa a tabela de carrocerias no banco de dados.
+  - `Cargo.php`: Modelo que representa a tabela de cargos no banco de dados.
+  - `Funcionario.php`: Modelo que representa a tabela de funcionários no banco de dados.
+
+- **App/Middlewares**:
+  - `AccessControl.php`: Middleware para verificar as permissões de acesso dos usuários às rotas protegidas.
 
 - **Public**:
   - `index.php`: O ponto de entrada da aplicação que inicializa as rotas e direciona as requisições.
@@ -42,7 +50,7 @@ A estrutura do projeto é baseada na arquitetura MVC, organizada da seguinte for
 
 1. Clone o repositório:
     ```bash
-    git clone https://github.com/seu-usuario/lealcode.api.git
+    git clone https://github.com/aleRibeiro0209/lealcode.api.git
     ```
 
 2. Acesse o diretório do projeto:
@@ -61,6 +69,7 @@ A estrutura do projeto é baseada na arquitetura MVC, organizada da seguinte for
     DB_USER=usuario
     DB_PASS=senha
     DB_NAME=bdLealCar
+    JWT_SECRET=chaveSecreta
     ```
 
 5. Inicie o servidor:
@@ -68,7 +77,16 @@ A estrutura do projeto é baseada na arquitetura MVC, organizada da seguinte for
     php -S localhost:8000 -t public
     ```
 
-## Rotas da API
+## Segurança
+
+Todas as rotas da API, exceto as de logins e cadastros, estão protegidas por autenticação baseada em token JWT. O algoritmo utilizado para a assinatura dos tokens é o HS512, garantindo uma camada adicional de segurança. Para acessar qualquer outra rota, o cliente deve fornecer um token JWT válido no cabeçalho da requisição:
+
+- **Cabeçalho de Autenticação**:
+    ```http
+    Authorization: Bearer {seu_token_jwt}
+    ```
+
+## Rotas Protegidas da API
 
 ### Veículos
 
@@ -85,6 +103,32 @@ A estrutura do projeto é baseada na arquitetura MVC, organizada da seguinte for
 - **POST** `/carrocerias` - Adiciona uma nova carroceria.
 - **PUT** `/carrocerias/{id}` - Atualiza as informações de uma carroceria existente.
 - **DELETE** `/carrocerias/{id}` - Remove uma carroceria.
+
+### Funcionários
+
+- **GET** `/funcionarios` - Lista todos os funcionários.
+- **GET** `/funcionarios/{id}` - Retorna os detalhes de um funcionário específico.
+- **POST** `/funcionarios` - Adiciona um novo funcionário.
+- **PUT** `/funcionarios/{id}` - Atualiza as informações de um funcionário existente.
+- **DELETE** `/funcionarios/{id}` - Remove um funcionário.
+
+### Cargos
+
+- **GET** `/cargos` - Lista todos os cargos.
+- **GET** `/cargos/{id}` - Retorna os detalhes de um cargo específico.
+- **POST** `/cargos` - Adiciona um novo cargo.
+- **PUT** `/cargos/{id}` - Atualiza as informações de um cargo existente.
+- **DELETE** `/cargos/{id}` - Remove um cargo.
+
+## Rotas não Protegidas da API
+
+### Logins
+
+- **POST** `/logins` - Autentica um usuário e gera um token JWT.
+
+### Cadastros
+
+- **POST** `/cadastros` - Cria um novo funcionário.
 
 ## Metodologia Scrum
 

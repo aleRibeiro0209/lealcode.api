@@ -2,6 +2,8 @@
 
 namespace App\Core;
 
+use App\Middlewares\AccessControl;
+
 class Routes {
     
     private array $routes;
@@ -25,23 +27,56 @@ class Routes {
 
         $routes['Veiculo'] = array(
             'controller' => 'Veiculos',
-            'route' => 'veiculos'
+            'route' => '/veiculos'
         );
 
         $routes['Carroceria'] = array(
             'controller' => 'Carrocerias',
-            'route' => 'carrocerias'
+            'route' => '/carrocerias'
+        );
+        
+        $routes['Funcionarios'] = array(
+            'controller' => 'Funcionarios',
+            'route' => '/funcionarios'
+        );
+
+        $routes['Cargos'] = array(
+            'controller' => 'Cargos',
+            'route' => '/cargos'
+        );
+        
+        $routes['Logins'] = array(
+            'controller' => 'Logins',
+            'route' => '/logins'
+        );
+
+        $routes['Cadastros'] = array(
+            'controller' => 'Funcionarios',
+            'route' => '/cadastros'
         );
 
         $this->setRoutes($routes);
     }
 
     private function run(array $routes) {
+        $auth = new AccessControl;
+
         foreach ($routes as $key => $route) {
             $urls = $this->getUrl();
-            if ($urls[0] == $route['route']) {
+            if ("/$urls[0]" == $route['route']) {
                 $class = "App\\Controllers\\" . $route['controller'];
                 $method = $_SERVER['REQUEST_METHOD'];
+
+                if ($route['route'] == "/logins" && $method == 'POST') {
+                    $controller = new $class;
+                    return;
+                } elseif ($route['route'] == "/cadastros" && $method == 'POST') {
+                    $controller = new $class;
+                    $controller->store();
+                    return;
+                }
+
+                $auth->checkPermission($urls[0], $this->getActionByMethod($method));
 
                 if (class_exists($class)) {
                     $controller = new $class;
@@ -96,4 +131,17 @@ class Routes {
         return $urls;
     }
 
+    private function getActionByMethod(string $method): string {
+        switch ($method) {
+            case 'POST':
+                return 'create';
+            case 'PUT':
+                return 'edit';
+            case 'DELETE':
+                return 'delete';
+            case 'GET':
+            default:
+                return 'view';
+        }
+    }
 }

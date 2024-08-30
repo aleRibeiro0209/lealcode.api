@@ -40,7 +40,7 @@ class Veiculos extends Controller {
             echo json_encode($veiculoObj);
         } else {
             http_response_code(404);
-            echo json_encode(['erro' => 'Carroceria não cadastrada']);
+            echo json_encode(['erro' => 'Carroceria não cadastrada ou não encontrada']);
         }
     }
 
