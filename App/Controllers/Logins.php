@@ -7,11 +7,7 @@ use App\Middlewares\AccessControl;
 
 class Logins extends Controller {
 
-    public function __construct() {
-        $this->run();
-    }
-
-    private function run() {
+    public function store() {
         $credenciais = $this->getBodyRequest();
 
         $funcionarioModel = $this->getModel('Funcionario');

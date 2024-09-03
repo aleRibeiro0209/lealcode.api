@@ -2,7 +2,7 @@
 
 ## Descrição
 
-**LealCode.API** é uma API RESTful desenvolvida em PHP com a arquitetura MVC (Model-View-Controller). Esta API foi projetada para gerenciar o estoque de uma rede de agências de carro. Este projeto é parte de uma atividade da disciplina de Engenharia de Software II, cujo objetivo é proporcionar uma experiência prática no uso da metodologia Scrum.
+**LealCode.API** é uma API RESTful desenvolvida em PHP com a arquitetura MVC (Model-View-Controller). Esta API foi projetada para gerenciar o estoque de uma rede de agências de carros. Este projeto é parte de uma atividade da disciplina de Engenharia de Software II, cujo objetivo é proporcionar uma experiência prática no uso da metodologia Scrum.
 
 ## Funcionalidades
 

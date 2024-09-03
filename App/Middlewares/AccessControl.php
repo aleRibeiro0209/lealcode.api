@@ -37,13 +37,13 @@ class AccessControl {
                 return;
             } else {
                 http_response_code(403);
-                echo json_encode(['erro' => 'Proibido: Você não tem permissão para acessar este recurso']);
+                echo json_encode(['erro' => 'Proibido! Usuário não tem permissão para acessar este recurso']);
                 exit;
             }
 
         } catch (\Exception $e) {
             http_response_code(401);
-            echo json_encode(['erro' => 'Não autorizado: Token inválido']);
+            echo json_encode(['erro' => 'Usuário não autorizado! Token inválido']);
             exit;
         }
     }

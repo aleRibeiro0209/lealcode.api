@@ -27,32 +27,44 @@ class Routes {
 
         $routes['Veiculo'] = array(
             'controller' => 'Veiculos',
-            'route' => '/veiculos'
+            'route' => '/veiculos',
+            'permission' => 1
         );
 
         $routes['Carroceria'] = array(
             'controller' => 'Carrocerias',
-            'route' => '/carrocerias'
+            'route' => '/carrocerias',
+            'permission' => 1
         );
         
         $routes['Funcionarios'] = array(
             'controller' => 'Funcionarios',
-            'route' => '/funcionarios'
+            'route' => '/funcionarios',
+            'permission' => 1
         );
 
         $routes['Cargos'] = array(
             'controller' => 'Cargos',
-            'route' => '/cargos'
+            'route' => '/cargos',
+            'permission' => 1
         );
         
         $routes['Logins'] = array(
             'controller' => 'Logins',
-            'route' => '/logins'
+            'route' => '/logins',
+            'permission' => 0
         );
 
         $routes['Cadastros'] = array(
             'controller' => 'Funcionarios',
-            'route' => '/cadastros'
+            'route' => '/cadastros',
+            'permission' => 0
+        );
+
+        $routes['Estoque'] = array(
+            'controller' => 'Estoques',
+            'route' => '/estoque',
+            'permission' => 0
         );
 
         $this->setRoutes($routes);
@@ -67,16 +79,9 @@ class Routes {
                 $class = "App\\Controllers\\" . $route['controller'];
                 $method = $_SERVER['REQUEST_METHOD'];
 
-                if ($route['route'] == "/logins" && $method == 'POST') {
-                    $controller = new $class;
-                    return;
-                } elseif ($route['route'] == "/cadastros" && $method == 'POST') {
-                    $controller = new $class;
-                    $controller->store();
-                    return;
+                if ($route['permission']) {
+                    $auth->checkPermission($urls[0], $this->getActionByMethod($method));
                 }
-
-                $auth->checkPermission($urls[0], $this->getActionByMethod($method));
 
                 if (class_exists($class)) {
                     $controller = new $class;
