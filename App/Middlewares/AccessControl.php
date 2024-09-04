@@ -11,14 +11,12 @@ class AccessControl {
 
     public function __construct() {
         
-        /**
-         * @var mixed
-         * 
-         * Ambiente de desenvolvimento
-         * $dotenv = \Dotenv\Dotenv::createImmutable(dirname(__DIR__, 2));
-         * $dotenv->load();
-         * 
-         */
+        // Carregar o arquivo .env no ambiente de desenvolvimento, se ele existir
+        $envFile = dirname(__DIR__, 2) . '/.env';
+        if (file_exists($envFile)) {
+            $dotenv = \Dotenv\Dotenv::createImmutable(dirname(__DIR__, 2));
+            $dotenv->load();
+        }
 
         $this->secretKey = $_ENV['JWT_SECRET'] ?? getenv('JWT_SECRET');
     }

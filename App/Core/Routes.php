@@ -46,7 +46,7 @@ class Routes {
         $routes['Cargos'] = array(
             'controller' => 'Cargos',
             'route' => '/cargos',
-            'permission' => 1
+            'permission' => 0
         );
         
         $routes['Logins'] = array(
@@ -82,11 +82,7 @@ class Routes {
                         $action = 'destroy';
                         break;
                     case 'GET':
-                        if (isset($urls[1])) {
-                            $action = 'show';
-                        } else {
-                            $action = 'index';
-                        }
+                        isset($urls[1]) ? $action = 'show' : $action = 'index';
                         break;
                     case 'POST':
                         $action = 'store';
