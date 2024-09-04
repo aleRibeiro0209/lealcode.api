@@ -6,7 +6,7 @@ class Model {
     
     public static function getConn(): ?\PDO {
 
-        $dotenv = \Dotenv\Dotenv::createImmutable(dirname(__DIR__, 2));
+        $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
         $dotenv->load();
     
         $dbHost = $_ENV['DB_HOST'];
