@@ -70,52 +70,45 @@ class Routes {
             if ("/$urls[0]" == $route['route']) {
                 $class = "App\\Controllers\\" . $route['controller'];
                 $method = $_SERVER['REQUEST_METHOD'];
+                $action = '';
 
                 if ($route['permission']) {
                     $auth = new AccessControl;
                     $auth->checkPermission($urls[0], $this->getActionByMethod($method));
                 }
 
-                if (class_exists($class)) {
-                    $controller = new $class;
-                    switch ($method) {
-                        case 'DELETE':
-                            if (isset($urls[1])) {
-                                $controller->destroy($urls[1]);
-                            } else {
-                                http_response_code(404);
-                                echo json_encode(['erro' => 'Id não encontrado']);
-                            }
-                            break;
-                        case 'GET':
-                            if (isset($urls[1])) {
-                                $controller->show($urls[1]);
-                            } else {
-                                $controller->index();
-                            }
-                            break;
-                        case 'POST':
-                            $controller->store();
-                            break;
-                        case 'PUT':
-                            if (isset($urls[1])) {
-                                $controller->update($urls[1]);
-                            } else {
-                                http_response_code(404);
-                                echo json_encode(['erro' => 'Id não encontrado']);
-                            }
-                            break;
-                        default:
-                            http_response_code(405);
-                            echo json_encode(['erro' => 'Verbo de requisição não suportado']);
-                            break;
-                    }
-                    return;
-                } else {
-                    http_response_code(500);
-                    echo json_encode(['erro' => 'Controller não encontrado']);
-                    return;
+                switch ($method) {
+                    case 'DELETE':
+                        $action = 'destroy';
+                        break;
+                    case 'GET':
+                        if (isset($urls[1])) {
+                            $action = 'show';
+                        } else {
+                            $action = 'index';
+                        }
+                        break;
+                    case 'POST':
+                        $action = 'store';
+                        break;
+                    case 'PUT':
+                        $action = 'update';
+                        break;
+                    default:
+                        http_response_code(405);
+                        echo json_encode(['erro' => 'Verbo de requisição não suportado']);
+                        break;
                 }
+
+                if (method_exists($class, $action)) {
+                    $controller = new $class;
+                    isset($urls[1]) ? $controller->$action($urls[1]) : $controller->$action();
+                } else {
+                    http_response_code(404);
+                    echo json_encode(['erro' => 'Método não encontrado']);
+                }
+
+                return;
             }
         }
 
