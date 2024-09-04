@@ -65,8 +65,6 @@ class Routes {
     }
 
     private function run(array $routes) {
-        $auth = new AccessControl;
-
         foreach ($routes as $key => $route) {
             $urls = $this->getUrl();
             if ("/$urls[0]" == $route['route']) {
@@ -74,6 +72,7 @@ class Routes {
                 $method = $_SERVER['REQUEST_METHOD'];
 
                 if ($route['permission']) {
+                    $auth = new AccessControl;
                     $auth->checkPermission($urls[0], $this->getActionByMethod($method));
                 }
 
