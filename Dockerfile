@@ -21,8 +21,10 @@ WORKDIR /var/www/html
 # Copiar os arquivos da aplicação para o diretório web
 COPY . /var/www/html/
 
-# Garantir que o usuário www-data tenha as permissões corretas
-RUN chown -R www-data:www-data /var/www/html
+# Ajustar permissões
+RUN chown -R www-data:www-data /var/www/html \
+    && find /var/www/html -type d -exec chmod 755 {} \; \
+    && find /var/www/html -type f -exec chmod 644 {} \;
 
 # Instalar as dependências do Composer
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
