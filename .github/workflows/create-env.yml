@@ -31,4 +31,4 @@ jobs:
         run: echo "RAILWAY_TOKEN=${{ secrets.RAILWAY_API_TOKEN }}" >> $GITHUB_ENV
 
       - name: Deploy to Railway
-        run: railway up
+        run: railway up --service lealcode.api
