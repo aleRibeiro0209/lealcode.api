@@ -50,8 +50,8 @@ class Routes {
         );
         
         $routes['Logins'] = array(
-            'controller' => 'Logins',
-            'route' => '/logins',
+            'controller' => 'LoginController',
+            'route' => '/login',
             'permission' => 0
         );
 

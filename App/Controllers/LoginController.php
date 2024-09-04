@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Middlewares\AccessControl;
 
-class Logins extends Controller {
+class LoginController extends Controller {
 
     public function store() {
         $credenciais = $this->getBodyRequest();
