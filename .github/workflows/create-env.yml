@@ -27,6 +27,8 @@ jobs:
           echo "# Chave de segurança" >> .env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
 
+      - name: Set Railway Token
+        run: echo "RAILWAY_TOKEN=${{ secrets.RAILWAY_API_TOKEN }}" >> $GITHUB_ENV
+
       - name: Deploy to Railway
-        run: |
-          railway up --token ${{ secrets.RAILWAY_API_TOKEN }}
+        run: railway up
