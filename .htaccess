@@ -1,10 +1,8 @@
 RewriteEngine On
 
-# Redirecionar todas as requisições para o diretório public
-RewriteCond %{REQUEST_URI} !^/public/
-RewriteRule ^(.*)$ /public/$1 [L]
-
 # Se o arquivo ou diretório existir no diretório public, servir normalmente
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^(.*)$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Redirecionar todas as outras requisições para o diretório public/index.php
+RewriteRule ^(.*)$ /public/index.php [L]
