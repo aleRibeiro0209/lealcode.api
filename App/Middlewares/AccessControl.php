@@ -10,7 +10,7 @@ class AccessControl {
     private string $secretKey;
 
     public function __construct() {
-        $dotenv = \Dotenv\Dotenv::createImmutable('/etc/secrets');
+        $dotenv = \Dotenv\Dotenv::createImmutable(dirname(__DIR__, 2));
         $dotenv->load();
 
         $this->secretKey = $_ENV['JWT_SECRET'];

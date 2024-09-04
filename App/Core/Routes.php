@@ -121,7 +121,7 @@ class Routes {
         }
 
         http_response_code(404);
-        echo json_encode(['erro' => 'Rota não encontrada A']);
+        echo json_encode(['erro' => 'Rota não encontrada']);
     }
 
     private function getUrl(): array {
