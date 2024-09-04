@@ -55,14 +55,8 @@ class Routes {
             'permission' => 0
         );
 
-        $routes['Cadastros'] = array(
-            'controller' => 'Funcionarios',
-            'route' => '/cadastros',
-            'permission' => 0
-        );
-
         $routes['Estoque'] = array(
-            'controller' => 'Estoques',
+            'controller' => 'EstoqueController',
             'route' => '/estoque',
             'permission' => 0
         );
@@ -127,7 +121,7 @@ class Routes {
         }
 
         http_response_code(404);
-        echo json_encode(['erro' => 'Rota não encontrada']);
+        echo json_encode(['erro' => 'Rota não encontrada A']);
     }
 
     private function getUrl(): array {
