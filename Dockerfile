@@ -27,7 +27,11 @@ RUN chown -R www-data:www-data /var/www/html \
     && find /var/www/html -type f -exec chmod 644 {} \;
 
 # Instalar as dependências do Composer
+WORKDIR /var/www/html
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+
+# Definir ServerName para evitar o aviso do Apache
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 # Habilitar o mod_rewrite e configurar o AllowOverride
 RUN a2enmod rewrite \
