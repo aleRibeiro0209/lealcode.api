@@ -12,6 +12,10 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v2
 
+      - name: Install Railway CLI
+        run: |
+          curl -fsSL https://railway.app/install.sh | sh
+
       - name: Create .env file
         run: |
           echo "# Acesso ao banco de dados" > .env
