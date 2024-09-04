@@ -10,10 +10,17 @@ class AccessControl {
     private string $secretKey;
 
     public function __construct() {
-        $dotenv = \Dotenv\Dotenv::createImmutable(dirname(__DIR__, 2));
-        $dotenv->load();
+        
+        /**
+         * @var mixed
+         * 
+         * Ambiente de desenvolvimento
+         * $dotenv = \Dotenv\Dotenv::createImmutable(dirname(__DIR__, 2));
+         * $dotenv->load();
+         * 
+         */
 
-        $this->secretKey = $_ENV['JWT_SECRET'];
+        $this->secretKey = $_ENV['JWT_SECRET'] ?? getenv('JWT_SECRET');
     }
 
     public function checkPermission(string $resource, string $action): void {

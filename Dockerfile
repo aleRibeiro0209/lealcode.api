@@ -18,7 +18,7 @@ COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 # Definir o diretório de trabalho
 WORKDIR /var/www/html
 
-# Copiar os arquivos da aplicação para o diretório web, preservando o arquivo .env se ele existir
+# Copiar os arquivos da aplicação para o diretório web
 COPY . /var/www/html/
 
 # Ajustar o DocumentRoot para apontar para o diretório "public" do Laravel (se aplicável)

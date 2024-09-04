@@ -6,13 +6,19 @@ class Model {
     
     public static function getConn(): ?\PDO {
 
-        $dotenv = \Dotenv\Dotenv::createImmutable(dirname(__DIR__, 2));
-        $dotenv->load();
+        /**
+         *  @var mixed
+         * 
+         * Ambiente de desenvolvimento
+         * $dotenv = \Dotenv\Dotenv::createImmutable(dirname(__DIR__, 2));
+         * $dotenv->load();
+         * 
+         */
     
-        $dbHost = $_ENV['DB_HOST'];
-        $dbName = $_ENV['DB_NAME'];
-        $dbUser = $_ENV['DB_USER'];
-        $dbPassword = $_ENV['DB_PASSWORD'];
+        $dbHost = $_ENV['DB_HOST'] ?? getenv('DB_HOST');
+        $dbName = $_ENV['DB_NAME'] ?? getenv('DB_NAME');
+        $dbUser = $_ENV['DB_USER'] ?? getenv('DB_USER');
+        $dbPassword = $_ENV['DB_PASSWORD'] ?? getenv('DB_PASSWORD');
     
         if (!$dbHost || !$dbName || !$dbUser || !$dbPassword) {
           echo json_encode(["erro" => 'Configuração de banco de dados inválida.']);
