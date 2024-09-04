@@ -1,0 +1,28 @@
+name: Create .env file for Railway Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Create .env file
+        run: |
+          echo "# Acesso ao banco de dados" > .env
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+          echo "" >> .env
+          echo "# Chave de segurança" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+
+      - name: Deploy to Railway
+        run: |
+          railway up --token ${{ secrets.RAILWAY_API_TOKEN }}
