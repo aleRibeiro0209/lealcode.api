@@ -27,6 +27,10 @@ RUN chown -R www-data:www-data /var/www/html
 # Instalar as dependências do Composer
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
+# Habilitar o mod_rewrite e configurar o AllowOverride
+RUN a2enmod rewrite \
+    && sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
+
 # Expor a porta 80 para o servidor Apache
 EXPOSE 80
 
