@@ -27,5 +27,18 @@ class EstoqueController extends Controller {
         }
     }
 
-    // TODO: Adicionar métodos ao Controller de Estoque
+    public function update(int $id) {
+        $atualizacaoEstoque = $this->getBodyRequest();
+        $estoqueModel = $this->getModel('Estoque');
+        $estoqueAtualizado = $estoqueModel->update($id, $this->funcionario->idFuncionario, $atualizacaoEstoque);
+
+        if ($estoqueAtualizado) {
+            http_response_code(200);
+            echo json_encode($estoqueAtualizado);
+        } else {
+            http_response_code(404);
+            echo json_encode(['erro' => 'Estoque não atualizado ou id não encontrado']);
+        }
+    }
+
 }

@@ -2,7 +2,7 @@
 
 ## Descrição
 
-**LealCode.API** é uma API RESTful desenvolvida em PHP com a arquitetura MVC (Model-View-Controller). Esta API foi projetada para gerenciar o estoque de uma rede de agências de carros. Este projeto é parte de uma atividade da disciplina de Engenharia de Software II, cujo objetivo é proporcionar uma experiência prática no uso da metodologia Scrum.
+**LealCode.API** é uma API RESTful desenvolvida em PHP com a arquitetura MVC (Model-View-Controller). Esta API foi projetada para gerenciar o estoque de uma rede de agências de carros. Este projeto é parte de uma atividade da disciplina de Engenharia de Software II, cujo objetivo é proporcionar uma experiência prática no uso da metodologia Scrum. A API está disponível na Railway na url: https://lealcode.up.railway.app/
 
 ## Funcionalidades
 
@@ -25,13 +25,15 @@ A estrutura do projeto é baseada na arquitetura MVC, organizada da seguinte for
   - `Carrocerias.php`: Controlador para gerenciar as operações relacionadas às carrocerias.
   - `Cargos.php`: Controlador para gerenciar as operações relacionadas aos cargos.
   - `Funcionarios.php`: Controlador para gerenciar as operações relacionadas aos funcionários.
-  - `Logins.php`: Controlador responsável pelas operações de autenticação e login.
+  - `LoginController.php`: Controlador responsável pelas operações de autenticação e login.
+  - `EstoqueController.php`: Controlador responsável pelas operações de relacionadas ao estoque.
 
 - **App/Models**:
   - `Veiculo.php`: Modelo que representa a tabela de veículos no banco de dados.
   - `Carroceria.php`: Modelo que representa a tabela de carrocerias no banco de dados.
   - `Cargo.php`: Modelo que representa a tabela de cargos no banco de dados.
   - `Funcionario.php`: Modelo que representa a tabela de funcionários no banco de dados.
+  - `Estoque.php`: Modelo que representa a tabela de estoque no banco de dados.
 
 - **App/Middlewares**:
   - `AccessControl.php`: Middleware para verificar as permissões de acesso dos usuários às rotas protegidas.
@@ -79,7 +81,7 @@ A estrutura do projeto é baseada na arquitetura MVC, organizada da seguinte for
 
 ## Segurança
 
-Todas as rotas da API, exceto as de logins e cadastros, estão protegidas por autenticação baseada em token JWT. O algoritmo utilizado para a assinatura dos tokens é o HS512, garantindo uma camada adicional de segurança. Para acessar qualquer outra rota, o cliente deve fornecer um token JWT válido no cabeçalho da requisição:
+Todas as rotas da API, exceto a de login, estão protegidas por autenticação baseada em token JWT. O algoritmo utilizado para a assinatura dos tokens é o HS512, garantindo uma camada adicional de segurança. Para acessar qualquer outra rota, o cliente deve fornecer um token JWT válido no cabeçalho da requisição:
 
 - **Cabeçalho de Autenticação**:
     ```http
@@ -120,15 +122,17 @@ Todas as rotas da API, exceto as de logins e cadastros, estão protegidas por au
 - **PUT** `/cargos/{id}` - Atualiza as informações de um cargo existente.
 - **DELETE** `/cargos/{id}` - Remove um cargo.
 
+### Estoque
+
+- **GET** `/estoque` - Lista todos os veiculos e seus status no estoque.
+- **GET** `/estoque/{id}` - Retorna os detalhes de um veiculo no estoque em específico.
+- **PUT** `/estoque/{id}` - Atualiza o status de um veiculo existente no estoque.
+
 ## Rotas não Protegidas da API
 
-### Logins
+### Login
 
-- **POST** `/logins` - Autentica um usuário e gera um token JWT.
-
-### Cadastros
-
-- **POST** `/cadastros` - Cria um novo funcionário.
+- **POST** `/login` - Autentica um usuário e gera um token JWT.
 
 ## Metodologia Scrum
 

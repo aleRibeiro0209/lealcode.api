@@ -21,7 +21,7 @@ class AccessControl {
         $this->secretKey = $_ENV['JWT_SECRET'] ?? getenv('JWT_SECRET');
     }
 
-    public function checkPermission(string $resource, string $action): void {
+    public function checkPermission(string $resource, string $action) {
         $headers = apache_request_headers();
 
         if (!isset($headers['Authorization'])) {
@@ -39,10 +39,10 @@ class AccessControl {
 
             if (isset($decoded->permissions->$resource) && isset($decoded->permissions->$resource->$action) && $decoded->permissions->$resource->$action === true) {
                 // Permissão concedida
-                return;
+                return $decoded->user;
             } else {
                 http_response_code(403);
-                echo json_encode(['erro' => 'Proibido! Usuário não tem permissão para acessar este recurso']);
+                echo json_encode(['erro' => 'Usuário não tem permissão para acessar este recurso']);
                 exit;
             }
 

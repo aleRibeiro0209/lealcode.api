@@ -46,7 +46,7 @@ class Routes {
         $routes['Cargos'] = array(
             'controller' => 'Cargos',
             'route' => '/cargos',
-            'permission' => 0
+            'permission' => 1
         );
         
         $routes['Logins'] = array(
@@ -58,7 +58,7 @@ class Routes {
         $routes['Estoque'] = array(
             'controller' => 'EstoqueController',
             'route' => '/estoque',
-            'permission' => 0
+            'permission' => 1
         );
 
         $this->setRoutes($routes);
@@ -70,11 +70,12 @@ class Routes {
             if ("/$urls[0]" == $route['route']) {
                 $class = "App\\Controllers\\" . $route['controller'];
                 $method = $_SERVER['REQUEST_METHOD'];
+                $controller = new $class;
                 $action = '';
 
                 if ($route['permission']) {
                     $auth = new AccessControl;
-                    $auth->checkPermission($urls[0], $this->getActionByMethod($method));
+                    $controller->funcionario = $auth->checkPermission($urls[0], $this->getActionByMethod($method));
                 }
 
                 switch ($method) {
@@ -97,7 +98,6 @@ class Routes {
                 }
 
                 if (method_exists($class, $action)) {
-                    $controller = new $class;
                     isset($urls[1]) ? $controller->$action($urls[1]) : $controller->$action();
                 } else {
                     http_response_code(404);
