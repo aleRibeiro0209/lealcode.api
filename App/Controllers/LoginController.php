@@ -23,7 +23,7 @@ class LoginController extends Controller {
             ]);
         } else {
             http_response_code(401);
-            echo json_encode(['message' => 'Email ou senha inválidos']);
+            echo json_encode(['message' => 'Matrícula ou senha inválidos']);
         }
     }
 }
