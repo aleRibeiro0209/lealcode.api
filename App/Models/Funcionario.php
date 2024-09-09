@@ -68,10 +68,10 @@ class Funcionario {
     }
 
     public function getByCredentials($data) {
-        $sql = "SELECT Func.idFuncionario, Func.nome, Func.cpf, Func.rg, Func.ctps, Func.telefone, Func.email, Func.dataNascimento, Func.dataAdmissao, Func.dataCadastro, Func.fotoPerfil, Carg.descricao AS cargo, Carg.permissoes FROM tbFuncionarios Func INNER JOIN tbCargos Carg ON Func.idCargo = Carg.idCargo WHERE email = :email AND senha = :senha";
+        $sql = "SELECT Func.idFuncionario, Func.nome, Func.cpf, Func.rg, Func.ctps, Func.telefone, Func.email, Func.dataNascimento, Func.dataAdmissao, Func.dataCadastro, Func.fotoPerfil, Carg.descricao AS cargo, Carg.permissoes FROM tbFuncionarios Func INNER JOIN tbCargos Carg ON Func.idCargo = Carg.idCargo WHERE idFuncionario = :matricula AND senha = :senha";
 
         $stmt = Model::getConn()->prepare($sql);
-        $stmt->bindParam(':email', $data->email);
+        $stmt->bindParam(':matricula', $data->matricula);
         $stmt->bindParam(':senha', $data->senha);
         $stmt->execute();
 
