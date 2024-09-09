@@ -4,5 +4,5 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
-# Redireciona para o index.php no diretório public
-RewriteRule ^(.*)$ /public/index.php [L]
+# Evita redirecionar se já estiver na pasta public
+RewriteCond %{REQUEST_URI} !^/public/
