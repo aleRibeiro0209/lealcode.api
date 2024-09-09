@@ -39,9 +39,6 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 RUN a2enmod rewrite \
     && sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 
-# Adicionar o arquivo .htaccess (caso necessário)
-COPY ./public/.htaccess /var/www/html/public/.htaccess
-
 # Expor a porta 80 para o servidor Apache
 EXPOSE 80
 
