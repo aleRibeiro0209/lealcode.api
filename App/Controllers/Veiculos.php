@@ -7,8 +7,13 @@ use App\Core\Controller;
 class Veiculos extends Controller {
 
     public function index() {
+        $solicitacaoPaginada = new \stdClass;
+        $solicitacaoPaginada->limite = isset($_GET['limite']) && $_GET['limite'] != '' ? (int)$_GET['limite'] : 10;
+        $solicitacaoPaginada->pagina = isset($_GET['pagina']) && $_GET['pagina'] != '' ? (int)$_GET['pagina'] : 1;
+        $solicitacaoPaginada->offset = ($solicitacaoPaginada->pagina - 1) * $solicitacaoPaginada->limite;
+
         $veiculoModel = $this->getModel('Veiculo');
-        $veiculoList = $veiculoModel->findAll();
+        $veiculoList = $veiculoModel->findAll($solicitacaoPaginada);
         
         http_response_code(200);
         echo json_encode($veiculoList);

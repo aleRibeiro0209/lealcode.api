@@ -34,13 +34,25 @@ class Veiculo {
         return $this;
     }
 
-    public function findAll(): array {
-        $sql = "SELECT * FROM tbVeiculos";
+    public function findAll($data): array {
+        $sql = "SELECT * FROM tbVeiculos LIMIT :limite OFFSET :offset";
 
         $stmt = Model::getConn()->prepare($sql);
+        $stmt->bindParam(':limite', $data->limite, \PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $data->offset, \PDO::PARAM_INT);
         $stmt->execute();
+        $veiculos = $stmt->fetchAll(\PDO::FETCH_OBJ);
 
-        return $stmt->fetchAll(\PDO::FETCH_OBJ);
+        $sqlCount = "SELECT COUNT(*) FROM tbVeiculos";
+        $total = Model::getConn()->query($sqlCount)->fetchColumn();
+
+        return [
+            'veiculos' => $veiculos,
+            'total' => $total,
+            'paginaAtual' => $data->pagina,
+            'itensPorPagina' => $data->limite,
+            'totalPaginas' => ceil($total / $data->limite)
+        ];
     }
 
     public function getId($id) {

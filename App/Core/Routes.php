@@ -72,12 +72,7 @@ class Routes {
                 $method = $_SERVER['REQUEST_METHOD'];
                 $controller = new $class;
                 $action = '';
-
-                if ($route['permission']) {
-                    $auth = new AccessControl;
-                    $controller->funcionario = $auth->checkPermission($urls[0], $this->getActionByMethod($method));
-                }
-
+                
                 switch ($method) {
                     case 'DELETE':
                         $action = 'destroy';
@@ -91,10 +86,18 @@ class Routes {
                     case 'PUT':
                         $action = 'update';
                         break;
+                    case 'OPTIONS':
+                        header("HTTP/1.1 200 OK");
+                        exit();
                     default:
                         http_response_code(405);
                         echo json_encode(['erro' => 'Verbo de requisição não suportado']);
                         break;
+                }
+
+                if ($route['permission']) {
+                    $auth = new AccessControl;
+                    $controller->funcionario = $auth->checkPermission($urls[0], $this->getActionByMethod($method));
                 }
 
                 if (method_exists($class, $action)) {
