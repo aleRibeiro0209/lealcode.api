@@ -12,13 +12,25 @@ class Estoque {
     private int $idFuncionario;
     private string $dataAtualizacao;
     
-    public function findAll(): array {
-        $sql = "SELECT * FROM tbEstoque";
+    public function findAll($data): array {
+        $sql = "SELECT * FROM tbEstoque LIMIT :limite OFFSET :offset";
 
         $stmt = Model::getConn()->prepare($sql);
+        $stmt->bindParam(':limite', $data->limite, \PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $data->offset, \PDO::PARAM_INT);
         $stmt->execute();
+        $estoque = $stmt->fetchAll(\PDO::FETCH_OBJ);
 
-        return $stmt->fetchAll(\PDO::FETCH_OBJ);
+        $sqlCount = "SELECT COUNT(*) FROM tbVeiculos";
+        $total = Model::getConn()->query($sqlCount)->fetchColumn();
+
+        return [
+            'estoque' => $estoque,
+            'total' => $total,
+            'paginaAtual' => $data->pagina,
+            'itensPorPagina' => $data->limite,
+            'totalPaginas' => ceil($total / $data->limite)
+        ];
     }
     
     public function getId($id): array {

@@ -7,8 +7,13 @@ use App\Core\Controller;
 class EstoqueController extends Controller {
 
     public function index() {
+        $solicitacaoPaginada = new \stdClass;
+        $solicitacaoPaginada->limite = isset($_GET['limite']) && $_GET['limite'] != '' ? (int)$_GET['limite'] : 10;
+        $solicitacaoPaginada->pagina = isset($_GET['pagina']) && $_GET['pagina'] != '' ? (int)$_GET['pagina'] : 1;
+        $solicitacaoPaginada->offset = ($solicitacaoPaginada->pagina - 1) * $solicitacaoPaginada->limite;
+
         $estoqueModel = $this->getModel('Estoque');
-        $estoqueList = $estoqueModel->findAll();
+        $estoqueList = $estoqueModel->findAll($solicitacaoPaginada);
 
         http_response_code(200);
         echo json_encode($estoqueList);

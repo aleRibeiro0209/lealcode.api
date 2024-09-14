@@ -35,7 +35,7 @@ class Veiculo {
     }
 
     public function findAll($data): array {
-        $sql = "SELECT * FROM tbVeiculos LIMIT :limite OFFSET :offset";
+        $sql = "SELECT V.*, C.descricao as carroceria FROM tbVeiculos V INNER JOIN tbCarrocerias C ON V.idCarroceria = C.idCarroceria LIMIT :limite OFFSET :offset";
 
         $stmt = Model::getConn()->prepare($sql);
         $stmt->bindParam(':limite', $data->limite, \PDO::PARAM_INT);
