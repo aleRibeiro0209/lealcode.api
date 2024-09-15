@@ -56,7 +56,7 @@ class Veiculo {
     }
 
     public function getId($id) {
-        $sql = "SELECT * FROM tbVeiculos WHERE idVeiculo = ?";
+        $sql = "SELECT V.*, C.descricao as carroceria FROM tbVeiculos V INNER JOIN tbCarrocerias C ON V.idCarroceria = C.idCarroceria WHERE idVeiculo = ?";
 
         $stmt = Model::getConn()->prepare($sql);
         $stmt->bindValue(1, $id);

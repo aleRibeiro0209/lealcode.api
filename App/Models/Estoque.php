@@ -13,7 +13,7 @@ class Estoque {
     private string $dataAtualizacao;
     
     public function findAll($data): array {
-        $sql = "SELECT * FROM tbEstoque LIMIT :limite OFFSET :offset";
+        $sql = "SELECT E.idEstoque, E.status, E.idFuncionario, DATE_FORMAT(E.dataAtualizacao, '%d/%m/%Y') as dataAtualizacao, V.modelo, V.ano, V.placa, V.cor FROM tbEstoque E INNER JOIN tbVeiculos V ON E.idVeiculo = V.idVeiculo LIMIT :limite OFFSET :offset";
 
         $stmt = Model::getConn()->prepare($sql);
         $stmt->bindParam(':limite', $data->limite, \PDO::PARAM_INT);
@@ -33,14 +33,14 @@ class Estoque {
         ];
     }
     
-    public function getId($id): array {
-        $sql = "SELECT * FROM tbEstoque WHERE idEstoque = :id";
+    public function getId($id) {
+        $sql = "SELECT E.*, V.cor, V.modelo, V.placa, V.ano, DATE_FORMAT(E.dataAtualizacao, '%d/%m/%Y') as dataAtualizacaoF FROM tbEstoque E INNER JOIN tbVeiculos V ON E.idVeiculo = V.idVeiculo WHERE idEstoque = :id";
 
         $stmt = Model::getConn()->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
 
-        return $stmt->fetchAll(\PDO::FETCH_OBJ);
+        return $stmt->fetch(\PDO::FETCH_OBJ);
     }
 
     public function update(int $id, int $idFuncionario, $data) {
