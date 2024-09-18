@@ -57,7 +57,7 @@ class Estoque {
             }
         } catch (\PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Erro ao atualizar o estoque: ' . $e->getMessage()]);
+            return null;
         }
     }
 

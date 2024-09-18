@@ -61,7 +61,7 @@ class Cargo {
 
         } catch (\PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Não foi possível inserir os dados do cargo: ' . $e->getMessage()]);
+            return null;
         }
 
         return null;
@@ -81,7 +81,7 @@ class Cargo {
             }
         } catch (\PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Erro ao atualizar o cargo: ' . $e->getMessage()]);
+            return null;
         }
 
         return null;
@@ -96,7 +96,6 @@ class Cargo {
             return $stmt->execute();
         } catch (\PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Erro ao deletar o cargo: ' . $e->getMessage()]);
             return false;
         }
     }

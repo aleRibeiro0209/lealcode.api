@@ -111,10 +111,8 @@ class Funcionario {
 
         } catch (\PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Não foi possível inserir os dados do funcionário: ' . $e->getMessage()]);
+            return null;
         }
-
-        return null;
     }
 
     public function update($id, $data) {
@@ -145,10 +143,8 @@ class Funcionario {
             }
         } catch (\PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Erro ao atualizar o funcionário: ' . $e->getMessage()]);
+            return null;
         }
-
-        return null;
     }
 
     public function delete($id): bool {
@@ -160,7 +156,6 @@ class Funcionario {
             return $stmt->execute();
         } catch (\PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Erro ao deletar o funcionário: ' . $e->getMessage()]);
             return false;
         }
     }

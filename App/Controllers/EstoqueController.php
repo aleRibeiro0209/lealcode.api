@@ -39,7 +39,7 @@ class EstoqueController extends Controller {
 
         if ($estoqueAtualizado) {
             http_response_code(200);
-            echo json_encode($estoqueAtualizado);
+            echo json_encode(['message' => 'Registro atualizado com sucesso', 'data' => $estoqueAtualizado]);
         } else {
             http_response_code(404);
             echo json_encode(['erro' => 'Estoque não atualizado ou id não encontrado']);

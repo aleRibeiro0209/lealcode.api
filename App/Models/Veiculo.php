@@ -92,10 +92,8 @@ class Veiculo {
             }
         } catch (\PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Não foi possível inserir os dados do veículo: ' . $e->getMessage()]);
+            return null;
         }
-
-        return null;
     }
 
     public function update($id, $data) {
@@ -119,10 +117,8 @@ class Veiculo {
             }
         } catch (\PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Erro ao atualizar o veículo: ' . $e->getMessage()]);
+            return null;
         }
-
-        return null;
     }
 
     public function delete($id): bool {
@@ -134,7 +130,6 @@ class Veiculo {
             return $stmt->execute();
         } catch (\PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Erro ao deletar o veiculo: ' . $e->getMessage()]);
             return false;
         }
     }

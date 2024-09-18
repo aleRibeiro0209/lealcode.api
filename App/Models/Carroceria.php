@@ -16,7 +16,7 @@ class Carroceria {
     }
 
     public function findAll(): array {
-        $sql = "SELECT * FROM tbCarrocerias";
+        $sql = "SELECT * FROM tbCarrocerias ORDER BY descricao ASC";
 
         $stmt = Model::getConn()->prepare($sql);
         $stmt->execute();
@@ -67,7 +67,7 @@ class Carroceria {
             }
         } catch (\PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Não foi possível inserir os dados da Carroceria: ' . $e->getMessage()]);
+            return null;
         }
     }
 
@@ -84,10 +84,8 @@ class Carroceria {
             }
         } catch (\PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Erro ao atualizar a carroceria: ' . $e->getMessage()]);
+            return null;
         }
-
-        return null;
     }
 
     public function delete($id): bool {
@@ -99,7 +97,6 @@ class Carroceria {
             return $stmt->execute();
         } catch (\PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Erro ao deletar a carroceria: ' . $e->getMessage()]);
             return false;
         }
     }

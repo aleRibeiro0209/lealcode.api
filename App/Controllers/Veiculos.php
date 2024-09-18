@@ -41,8 +41,13 @@ class Veiculos extends Controller {
 
         if ($novoVeiculo->carroceria) {
             $veiculoObj = $veiculoModel->create($novoVeiculo);
-            http_response_code(201);
-            echo json_encode($veiculoObj);
+            if ($veiculoObj) {
+                http_response_code(201);
+                echo json_encode($veiculoObj);
+            } else {
+                http_response_code(500);
+                echo json_encode(['erro' => 'Erro ao cadastrar veículo']);
+            }
         } else {
             http_response_code(404);
             echo json_encode(['erro' => 'Carroceria não cadastrada ou não encontrada']);
