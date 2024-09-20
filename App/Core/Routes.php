@@ -61,6 +61,12 @@ class Routes {
             'permission' => 1
         );
 
+        $routes['Estoque'] = array(
+            'controller' => 'Notificacoes',
+            'route' => '/notificacoes',
+            'permission' => 0
+        );
+
         $this->setRoutes($routes);
     }
 
