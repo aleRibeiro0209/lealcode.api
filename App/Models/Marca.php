@@ -4,19 +4,19 @@ namespace App\Models;
 
 use App\Core\Model;
 
-class Carroceria {
+class Marca {
 
-    private int $idCarroceria;
+    private int $idMarca;
     private string $descricao;
 
-    private function contructCarroceria($data): Carroceria {
+    private function contructMarca($data): Marca {
         $this->descricao = $data->descricao;
 
         return $this;
     }
 
     public function findAll(): array {
-        $sql = "SELECT * FROM tbCarrocerias ORDER BY descricao ASC";
+        $sql = "SELECT * FROM tbMarcas ORDER BY descricao ASC";
 
         $stmt = Model::getConn()->prepare($sql);
         $stmt->execute();
@@ -25,7 +25,7 @@ class Carroceria {
     }
 
     public function getId($id) {
-        $sql = "SELECT * FROM tbCarrocerias WHERE idCarroceria = ?";
+        $sql = "SELECT * FROM tbMarcas WHERE idMarca = ?";
 
         $stmt = Model::getConn()->prepare($sql);
         $stmt->bindValue(1, $id);
@@ -39,7 +39,7 @@ class Carroceria {
     }
 
     public function findId($descricao) {
-        $sql = "SELECT idCarroceria FROM tbCarrocerias WHERE descricao = ?";
+        $sql = "SELECT idMarca FROM tbMarcas WHERE descricao = ?";
 
         $stmt = Model::getConn()->prepare($sql);
         $stmt->bindValue(1, $descricao);
@@ -52,17 +52,17 @@ class Carroceria {
         }
     }
 
-    public function create($data): ?Carroceria {
-        $this->contructCarroceria($data);
+    public function create($data): ?Marca {
+        $this->contructMarca($data);
 
-        $sql = "INSERT INTO tbCarrocerias (descricao) VALUES (:descricao)";
+        $sql = "INSERT INTO tbMarcas (descricao) VALUES (:descricao)";
 
         try {
             $stmt = Model::getConn()->prepare($sql);
             $stmt->bindParam(':descricao', $this->descricao);
 
             if ($stmt->execute()) {
-                $this->idCarroceria = Model::getLastId('idCarroceria', 'tbCarrocerias');
+                $this->idMarca = Model::getLastId('idMarca', 'tbMarcas');
                 return $this;
             }
         } catch (\PDOException $e) {
@@ -72,7 +72,7 @@ class Carroceria {
     }
 
     public function update($id, $data) {
-        $sql = "UPDATE tbCarrocerias SET descricao = :descricao WHERE idCarroceria = :id";
+        $sql = "UPDATE tbMarcas SET descricao = :descricao WHERE idMarca = :id";
 
         try {
             $stmt = Model::getConn()->prepare($sql);
@@ -89,7 +89,7 @@ class Carroceria {
     }
 
     public function delete($id): bool {
-        $sql =  "DELETE FROM tbCarrocerias WHERE idCarroceria = :id";
+        $sql =  "DELETE FROM tbMarcas WHERE idMarca = :id";
 
         try {
             $stmt = Model::getConn()->prepare($sql);

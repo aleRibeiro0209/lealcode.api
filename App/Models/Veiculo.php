@@ -127,7 +127,13 @@ class Veiculo {
         try {
             $stmt = Model::getConn()->prepare($sql);
             $stmt->bindParam(':id', $id);
-            return $stmt->execute();
+            $stmt->execute();
+
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
         } catch (\PDOException $e) {
             http_response_code(500);
             return false;

@@ -23,7 +23,7 @@ class Notificacoes extends Controller {
             echo json_encode($notificacao);
         } else {
             http_response_code(404);
-            echo json_encode(['erro' => 'Notificação não cadastrada']);
+            echo json_encode(['erro' => 'Notificação não cadastrada ou deletada']);
         }
     }
 
@@ -31,44 +31,14 @@ class Notificacoes extends Controller {
         $novaNotificacao = $this->getBodyRequest();
         
         $notificacaoModel = $this->getModel('Notificacao');
-        $funcionarioModel = $this->getModel('Funcionario');
-        $novaNotificacao->matricula = $funcionarioModel->findId($novaNotificacao->matricula);
+        $notificacaoObj = $notificacaoModel->create($novaNotificacao, $this->funcionario->idFuncionario);
 
-        if ($novaNotificacao->matricula) {
-            $notificacaoObj = $notificacaoModel->create($novaNotificacao);
-            if ($notificacaoObj) {
-                http_response_code(201);
-                echo json_encode($notificacaoObj);
-            } else {
-                http_response_code(500);
-                echo json_encode(['erro' => 'Erro ao cadastrar notificação']);
-            }
+        if ($notificacaoObj) {
+            http_response_code(201);
+            echo json_encode($notificacaoObj);
         } else {
-            http_response_code(404);
-            echo json_encode(['erro' => 'Matrícula não cadastrada ou não encontrada']);
-        }
-    }
-
-    public function update($id) {
-        $atualizacaoNotificacao = $this->getBodyRequest();
-
-        $notificacaoModel = $this->getModel('Notificacao');
-        $funcionarioModel = $this->getModel('Funcionario');
-        $atualizacaoNotificacao->matricula = $funcionarioModel->findId($atualizacaoNotificacao->matricula);
-
-        if($atualizacaoNotificacao->matricula) {
-            $notificacaoAtualizado = $notificacaoModel->update($id, $atualizacaoNotificacao);
-
-            if ($notificacaoAtualizado) {
-                http_response_code(200);
-                echo json_encode($notificacaoAtualizado);
-            } else {
-                http_response_code(404);
-                echo json_encode(['erro' => 'Notificação não encontrada ou não atualizada']);
-            }
-        } else {
-            http_response_code(404);
-            echo json_encode(['erro' => 'Matrícula não cadastrada']);
+            http_response_code(500);
+            echo json_encode(['erro' => 'Erro ao cadastrar notificação']);
         }
     }
 

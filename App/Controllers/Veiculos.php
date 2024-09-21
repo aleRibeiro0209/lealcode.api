@@ -37,9 +37,11 @@ class Veiculos extends Controller {
         
         $veiculoModel = $this->getModel('Veiculo');
         $carroceriaModel = $this->getModel('Carroceria');
+        $marcaModel = $this->getModel('Marca');
         $novoVeiculo->carroceria = $carroceriaModel->findId($novoVeiculo->carroceria);
+        $novoVeiculo->marca = $marcaModel->findId($novoVeiculo->marca);
 
-        if ($novoVeiculo->carroceria) {
+        if ($novoVeiculo->carroceria && $novoVeiculo->marca) {
             $veiculoObj = $veiculoModel->create($novoVeiculo);
             if ($veiculoObj) {
                 http_response_code(201);
@@ -50,7 +52,7 @@ class Veiculos extends Controller {
             }
         } else {
             http_response_code(404);
-            echo json_encode(['erro' => 'Carroceria não cadastrada ou não encontrada']);
+            echo json_encode(['erro' => 'A carroceria ou marca informada não está cadastrada. Verifique os dados e tente novamente.']);
         }
     }
 

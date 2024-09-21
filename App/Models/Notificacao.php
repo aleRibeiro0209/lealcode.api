@@ -9,6 +9,8 @@ class Notificacao {
     private int $idNotificacao;
     private string $mensagem;
     private \DateTime $dataHora;
+    private int $idFuncionario;
+    private int $idVeiculo;
 
     public function findAll() {
         $sql = "SELECT * FROM tbNotificacoes";
@@ -33,16 +35,16 @@ class Notificacao {
         }
     }
 
-    public function create($data) {
+    public function create($data, int $idFuncionario) {
         $this->mensagem = $data->mensagem;
+        $this->idFuncionario = $idFuncionario;
 
-        $sql = "INSERT INTO tbNotificacoes (mensagem, dataHora) VALUES (:mensagem, CURRENT_TIME)";
-
-        $dataHoraFormatada = $this->dataHora->format('Y-m-d H:m:s');
+        $sql = "INSERT INTO tbNotificacoes (mensagem, dataHora, idFuncionario) VALUES (:mensagem, CURRENT_TIMESTAMP, :idFuncionario)";
 
         try {
             $stmt = Model::getConn()->prepare($sql);
             $stmt->bindParam(':mensagem', $this->mensagem);
+            $stmt->bindParam(':idFuncionario', $this->idFuncionario);
             
             if ($stmt->execute()) {
                 $this->idNotificacao = Model::getLastId('idNotificacao', 'tbNotificacoes');
@@ -55,22 +57,7 @@ class Notificacao {
         }
     }
 
-    public function update($id, $data) {
-        $sql = "UPDATE tbNotificacoes SET mensagem = :mensagem, dataHora = CURRENT_TIME WHERE idNotificacao = :id";
-
-        try {
-            $stmt = Model::getConn()->prepare($sql);
-            $stmt->bindParam(':mensagem', $data->mensagem);
-            $stmt->bindParam(':id', $id);
-
-            if($stmt->execute()) {
-                return $this->getId($id);
-            }
-        } catch (\PDOException $e) {
-            http_response_code(500);
-            return null;
-        }
-    }
+    // TODO: Criar método para chamar no store do veiculo, para criar um notificação
 
     public function delete($id): bool {
         $sql =  "DELETE FROM tbNotificacoes WHERE idNotificacao = :id";
@@ -78,7 +65,13 @@ class Notificacao {
         try {
             $stmt = Model::getConn()->prepare($sql);
             $stmt->bindParam(':id', $id);
-            return $stmt->execute();
+            $stmt->execute();
+
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
         } catch (\PDOException $e) {
             http_response_code(500);
             return false;

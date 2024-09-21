@@ -9,6 +9,7 @@ class Cargo {
     private int $idCargo;
     private string $descricao;
     private string $permissoes;
+    private int $idSetor;
 
     public function findAll(): array {
         $sql = "SELECT * FROM tbCargos";
@@ -46,13 +47,15 @@ class Cargo {
     public function create($data): ?Cargo {
         $this->descricao = $data->descricao;
         $this->permissoes = $data->permissoes;
+        $this->idSetor = $data->setor;
 
-        $sql = "INSERT INTO tbCargos (descricao, permissoes) VALUES (?, ?)";
+        $sql = "INSERT INTO tbCargos (descricao, permissoes, idSetor) VALUES (:descricao, :permissoes, :idSetor)";
 
         try {
             $stmt = Model::getConn()->prepare($sql);
-            $stmt->bindValue(1, $this->descricao);
-            $stmt->bindValue(2, $this->permissoes);
+            $stmt->bindParam(":descricao", $this->descricao);
+            $stmt->bindParam(":permissoes", $this->permissoes);
+            $stmt->bindParam(":idSetor", $this->idSetor);
             
             if ($stmt->execute()) {
                 $this->idCargo = Model::getLastId('idCargo', 'tbCargos');
@@ -68,12 +71,13 @@ class Cargo {
     }
 
     public function update($id, $data) {
-        $sql = "UPDATE tbCargos SET descricao = :descricao, permissoes = :permissoes WHERE idCargo = :id";
+        $sql = "UPDATE tbCargos SET descricao = :descricao, permissoes = :permissoes, idSetor = :idSetor WHERE idCargo = :id";
 
         try {
             $stmt = Model::getConn()->prepare($sql);
             $stmt->bindParam(':descricao', $data->descricao);
             $stmt->bindParam(':permissoes', $data->permissoes);
+            $stmt->bindParam(':idSetor', $data->setor);
             $stmt->bindParam(':id', $id);
 
             if($stmt->execute()) {
@@ -93,7 +97,13 @@ class Cargo {
         try {
             $stmt = Model::getConn()->prepare($sql);
             $stmt->bindParam(':id', $id);
-            return $stmt->execute();
+            $stmt->execute();
+
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
         } catch (\PDOException $e) {
             http_response_code(500);
             return false;
