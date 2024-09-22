@@ -69,7 +69,7 @@ class Veiculo {
         return null;
     }
 
-    public function create($data): ?Veiculo {
+    public function create($data) {
         $this->constructCar($data);
 
         $sql = "INSERT INTO tbVeiculos (modelo, chassi, placa, renavam, numeroMotor, cor, ano, marca, idCarroceria) VALUES (:modelo, :chassi, :placa, :renavam, :numeroMotor, :cor, :ano, :marca, :idCarroceria)";
@@ -88,7 +88,7 @@ class Veiculo {
 
             if ($stmt->execute()) {
                 $this->idVeiculo = Model::getLastId('idVeiculo', 'tbVeiculos');
-                return $this;
+                return $this->getId($this->idVeiculo);
             }
         } catch (\PDOException $e) {
             http_response_code(500);

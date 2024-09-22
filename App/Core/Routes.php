@@ -66,7 +66,19 @@ class Routes {
             'route' => '/notificacoes',
             'permission' => 1
         );
+        
+        $routes['Marcas'] = array(
+            'controller' => 'Marcas',
+            'route' => '/marcas',
+            'permission' => 1
+        );
 
+        $routes['Setores'] = array(
+            'controller' => 'Setores',
+            'route' => '/setores',
+            'permission' => 1
+        );
+        
         $this->setRoutes($routes);
     }
 

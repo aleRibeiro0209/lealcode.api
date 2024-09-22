@@ -38,11 +38,14 @@ class Veiculos extends Controller {
         $veiculoModel = $this->getModel('Veiculo');
         $carroceriaModel = $this->getModel('Carroceria');
         $marcaModel = $this->getModel('Marca');
+        $notificacaoModel = $this->getModel('Notificacao');
         $novoVeiculo->carroceria = $carroceriaModel->findId($novoVeiculo->carroceria);
         $novoVeiculo->marca = $marcaModel->findId($novoVeiculo->marca);
 
         if ($novoVeiculo->carroceria && $novoVeiculo->marca) {
             $veiculoObj = $veiculoModel->create($novoVeiculo);
+            $notificacaoModel->veiculoTrigger($this->funcionario->idFuncionario, $veiculoObj->idVeiculo);
+
             if ($veiculoObj) {
                 http_response_code(201);
                 echo json_encode($veiculoObj);
