@@ -7,8 +7,11 @@ use App\Core\Controller;
 class Notificacoes extends Controller {
 
     public function index() {
+        $solicitacaoIntervalo = new \stdClass;
+        $solicitacaoIntervalo->dataInicial = isset($_GET['dataInicial']) && $_GET['dataInicial'] != '' ? $_GET['dataInicial'] : null;
+        $solicitacaoIntervalo->dataFinal = isset($_GET['dataFinal']) && $_GET['dataFinal'] != '' ? $_GET['dataFinal'] : null;
         $notificacaoModel = $this->getModel('Notificacao');
-        $notificacaoList = $notificacaoModel->findAll();
+        $notificacaoList = $notificacaoModel->findAll($solicitacaoIntervalo);
 
         http_response_code(200);
         echo json_encode($notificacaoList);

@@ -12,10 +12,13 @@ class Notificacao {
     private int $idFuncionario;
     private int $idVeiculo;
 
-    public function findAll() {
-        $sql = "SELECT * FROM tbNotificacoes ORDER BY idNotificacao DESC";
+    public function findAll($data) {
+        $sql = "SELECT * FROM tbNotificacoes WHERE (dataHora BETWEEN :dataInicial AND :dataFinal 
+               OR (:dataInicial IS NULL AND :dataFinal IS NULL)) ORDER BY idNotificacao DESC";
 
         $stmt = Model::getConn()->prepare($sql);
+        $stmt->bindParam(':dataInicial', $data->dataInicial);
+        $stmt->bindParam(':dataFinal', $data->dataFinal);
         $stmt->execute();
 
         return $stmt->fetchAll(\PDO::FETCH_OBJ);

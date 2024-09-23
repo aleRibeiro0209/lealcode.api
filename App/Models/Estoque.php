@@ -13,15 +13,32 @@ class Estoque {
     private string $dataAtualizacao;
     
     public function findAll($data): array {
-        $sql = "SELECT E.idEstoque, E.status, E.idFuncionario, DATE_FORMAT(E.dataAtualizacao, '%d/%m/%Y') as dataAtualizacao, V.modelo, V.ano, V.placa, V.cor FROM tbEstoque E INNER JOIN tbVeiculos V ON E.idVeiculo = V.idVeiculo LIMIT :limite OFFSET :offset";
+        $sql = "SELECT E.idEstoque, E.status, E.idFuncionario, DATE_FORMAT(E.dataAtualizacao, '%d/%m/%Y') as dataAtualizacao, V.modelo, V.ano, V.placa, V.cor 
+        FROM tbEstoque E 
+        INNER JOIN tbVeiculos V ON E.idVeiculo = V.idVeiculo
+        WHERE (:ano IS NULL OR V.ano LIKE CONCAT('%', :ano, '%'))
+            AND (:modelo IS NULL OR V.modelo LIKE CONCAT('%', :modelo, '%'))
+            AND (:cor IS NULL OR V.cor LIKE CONCAT('%', :cor, '%'))
+            AND (:placa IS NULL OR V.placa LIKE CONCAT('%', :placa, '%'))
+            AND (:status IS NULL OR E.status LIKE CONCAT('%', :status, '%'))
+            AND (:idFuncionario IS NULL OR E.idFuncionario LIKE CONCAT('%', :idFuncionario, '%'))
+            AND (:dataAtualizacao IS NULL OR E.dataAtualizacao LIKE CONCAT('%', :dataAtualizacao, '%'))
+        LIMIT :limite OFFSET :offset";
 
         $stmt = Model::getConn()->prepare($sql);
+        $stmt->bindParam(':ano', $data->ano);
+        $stmt->bindParam(':modelo', $data->modelo);
+        $stmt->bindParam(':cor', $data->cor);
+        $stmt->bindParam(':placa', $data->placa);
+        $stmt->bindParam(':status', $data->status);
+        $stmt->bindParam(':idFuncionario', $data->idFuncionario);
+        $stmt->bindParam(':dataAtualizacao', $data->dataAtualizacao);
         $stmt->bindParam(':limite', $data->limite, \PDO::PARAM_INT);
         $stmt->bindParam(':offset', $data->offset, \PDO::PARAM_INT);
         $stmt->execute();
         $estoque = $stmt->fetchAll(\PDO::FETCH_OBJ);
 
-        $sqlCount = "SELECT COUNT(*) FROM tbVeiculos";
+        $sqlCount = "SELECT COUNT(*) FROM tbEstoque";
         $total = Model::getConn()->query($sqlCount)->fetchColumn();
 
         return [

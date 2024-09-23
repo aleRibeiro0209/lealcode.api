@@ -7,13 +7,20 @@ use App\Core\Controller;
 class Veiculos extends Controller {
 
     public function index() {
-        $solicitacaoPaginada = new \stdClass;
-        $solicitacaoPaginada->limite = isset($_GET['limite']) && $_GET['limite'] != '' ? (int)$_GET['limite'] : 10;
-        $solicitacaoPaginada->pagina = isset($_GET['pagina']) && $_GET['pagina'] != '' ? (int)$_GET['pagina'] : 1;
-        $solicitacaoPaginada->offset = ($solicitacaoPaginada->pagina - 1) * $solicitacaoPaginada->limite;
+        $solicitacaoParametrizada = new \stdClass;
+        $solicitacaoParametrizada->ano = isset($_GET['ano']) && $_GET['ano'] != '' ? $_GET['ano'] : null;
+        $solicitacaoParametrizada->modelo = isset($_GET['modelo']) && $_GET['modelo'] != '' ? $_GET['modelo'] : null;
+        $solicitacaoParametrizada->cor = isset($_GET['cor']) && $_GET['cor'] != '' ? $_GET['cor'] : null;
+        $solicitacaoParametrizada->placa = isset($_GET['placa']) && $_GET['placa'] != '' ? $_GET['placa'] : null;
+        $solicitacaoParametrizada->carroceria = isset($_GET['carroceria']) && $_GET['carroceria'] != '' ? $_GET['carroceria'] : null;
+        $solicitacaoParametrizada->marca = isset($_GET['marca']) && $_GET['marca'] != '' ? $_GET['marca'] : null;
+
+        $solicitacaoParametrizada->limite = isset($_GET['limite']) && $_GET['limite'] != '' ? (int)$_GET['limite'] : 10;
+        $solicitacaoParametrizada->pagina = isset($_GET['pagina']) && $_GET['pagina'] != '' ? (int)$_GET['pagina'] : 1;
+        $solicitacaoParametrizada->offset = ($solicitacaoParametrizada->pagina - 1) * $solicitacaoParametrizada->limite;
 
         $veiculoModel = $this->getModel('Veiculo');
-        $veiculoList = $veiculoModel->findAll($solicitacaoPaginada);
+        $veiculoList = $veiculoModel->findAll($solicitacaoParametrizada);
         
         http_response_code(200);
         echo json_encode($veiculoList);
@@ -48,7 +55,7 @@ class Veiculos extends Controller {
 
             if ($veiculoObj) {
                 http_response_code(201);
-                echo json_encode($veiculoObj);
+                echo json_encode(['veiculo' => $veiculoObj, 'message' => 'Veículo cadastrado com sucesso']);
             } else {
                 http_response_code(500);
                 echo json_encode(['erro' => 'Erro ao cadastrar veículo']);

@@ -7,13 +7,21 @@ use App\Core\Controller;
 class EstoqueController extends Controller {
 
     public function index() {
-        $solicitacaoPaginada = new \stdClass;
-        $solicitacaoPaginada->limite = isset($_GET['limite']) && $_GET['limite'] != '' ? (int)$_GET['limite'] : 10;
-        $solicitacaoPaginada->pagina = isset($_GET['pagina']) && $_GET['pagina'] != '' ? (int)$_GET['pagina'] : 1;
-        $solicitacaoPaginada->offset = ($solicitacaoPaginada->pagina - 1) * $solicitacaoPaginada->limite;
+        $solicitacaoParametrizada = new \stdClass;
+        $solicitacaoParametrizada->ano = isset($_GET['ano']) && $_GET['ano'] != '' ? $_GET['ano'] : null;
+        $solicitacaoParametrizada->modelo = isset($_GET['modelo']) && $_GET['modelo'] != '' ? $_GET['modelo'] : null;
+        $solicitacaoParametrizada->cor = isset($_GET['cor']) && $_GET['cor'] != '' ? $_GET['cor'] : null;
+        $solicitacaoParametrizada->placa = isset($_GET['placa']) && $_GET['placa'] != '' ? $_GET['placa'] : null;
+        $solicitacaoParametrizada->idFuncionario = isset($_GET['idFuncionario']) && $_GET['idFuncionario'] != '' ? $_GET['idFuncionario'] : null;
+        $solicitacaoParametrizada->status = isset($_GET['status']) && $_GET['status'] != '' ? $_GET['status'] : null;
+        $solicitacaoParametrizada->dataAtualizacao = isset($_GET['dataAtualizacao']) && $_GET['dataAtualizacao'] != '' ? $_GET['dataAtualizacao'] : null;
+
+        $solicitacaoParametrizada->limite = isset($_GET['limite']) && $_GET['limite'] != '' ? (int)$_GET['limite'] : 10;
+        $solicitacaoParametrizada->pagina = isset($_GET['pagina']) && $_GET['pagina'] != '' ? (int)$_GET['pagina'] : 1;
+        $solicitacaoParametrizada->offset = ($solicitacaoParametrizada->pagina - 1) * $solicitacaoParametrizada->limite;
 
         $estoqueModel = $this->getModel('Estoque');
-        $estoqueList = $estoqueModel->findAll($solicitacaoPaginada);
+        $estoqueList = $estoqueModel->findAll($solicitacaoParametrizada);
 
         http_response_code(200);
         echo json_encode($estoqueList);

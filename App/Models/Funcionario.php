@@ -12,7 +12,9 @@ class Funcionario {
     private string $rg;
     private string $ctps;
     private string $telefone;
+    private ?string $telefoneSecundario;
     private string $email;
+    private string $emailCorporativo;
     private string $senha;
     private \DateTime $dataNascimento;
     private \DateTime $dataAdmissao;
@@ -28,13 +30,17 @@ class Funcionario {
         if (isset($data->dataCadastro)) {
             $this->dataCadastro = new \DateTime($data->dataCadastro);
         }
+
+
         
         $this->nome = $data->nome;
         $this->cpf = $data->cpf;
         $this->rg = $data->rg;
         $this->ctps = $data->ctps;
         $this->telefone = $data->telefone;
+        $this->telefoneSecundario = $data->telefoneSecundario ?? null;
         $this->email = $data->email;
+        $this->emailCorporativo = $this->createEmailCorporativo();
         $this->senha = $data->senha;
         $this->dataNascimento = new \DateTime($data->dataNascimento);
         $this->dataAdmissao = new \DateTime($data->dataAdmissao);
@@ -45,7 +51,7 @@ class Funcionario {
     }
 
     public function findAll() {
-        $sql = "SELECT idFuncionario, nome, cpf, rg, ctps, telefone, email, dataNascimento, dataAdmissao, dataCadastro, fotoPerfil, idCargo FROM tbFuncionarios";
+        $sql = "SELECT idFuncionario, nome, cpf, rg, ctps, telefone, telefoneSecundario, email, emailCorporativo, dataNascimento, dataAdmissao, dataCadastro, fotoPerfil, idCargo FROM tbFuncionarios";
 
         $stmt = Model::getConn()->prepare($sql);
         $stmt->execute();
@@ -54,7 +60,7 @@ class Funcionario {
     }
 
     public function getId($id) {
-        $sql = "SELECT idFuncionario, nome, cpf, rg, ctps, telefone, email, dataNascimento, dataAdmissao, dataCadastro, fotoPerfil, idCargo FROM tbFuncionarios WHERE idFuncionario = :id";
+        $sql = "SELECT idFuncionario, nome, cpf, rg, ctps, telefone, telefoneSecundario, email, emailCorporativo, dataNascimento, dataAdmissao, dataCadastro, fotoPerfil, idCargo FROM tbFuncionarios WHERE idFuncionario = :id";
 
         $stmt = Model::getConn()->prepare($sql);
         $stmt->bindParam(':id', $id);
@@ -68,7 +74,14 @@ class Funcionario {
     }
 
     public function getByCredentials($data) {
-        $sql = "SELECT Func.idFuncionario, Func.nome, Func.cpf, Func.rg, Func.ctps, Func.telefone, Func.email, Func.dataNascimento, Func.dataAdmissao, Func.dataCadastro, Func.fotoPerfil, Carg.descricao AS cargo, Carg.permissoes FROM tbFuncionarios Func INNER JOIN tbCargos Carg ON Func.idCargo = Carg.idCargo WHERE idFuncionario = :matricula AND senha = :senha";
+        $sql = "SELECT Func.idFuncionario, Func.nome, Func.cpf, Func.rg, Func.ctps, Func.telefone, Func.telefoneSecundario, Func.email, Func.emailCorporativo, Func.dataNascimento, Func.dataAdmissao, Func.dataCadastro, Func.fotoPerfil, Carg.descricao AS cargo, Carg.permissoes, Setor.descricao as setor
+        FROM tbFuncionarios Func 
+        INNER JOIN tbCargos Carg
+        ON Func.idCargo = Carg.idCargo
+        INNER JOIN tbSetores Setor
+        ON Carg.idSetor = Setor.idSetor
+        WHERE idFuncionario = :matricula 
+            AND senha = :senha";
 
         $stmt = Model::getConn()->prepare($sql);
         $stmt->bindParam(':matricula', $data->matricula);
@@ -85,7 +98,7 @@ class Funcionario {
     public function create($data): ?Funcionario {
         $this->constructFunc($data);
 
-        $sql = "INSERT INTO tbFuncionarios (nome, cpf, rg, ctps, telefone, email, senha, dataNascimento, dataAdmissao, fotoPerfil, idCargo) VALUES (:nome, :cpf, :rg, :ctps, :telefone, :email, :senha, :dataNascimento, :dataAdmissao, :fotoPerfil, :idCargo)";
+        $sql = "INSERT INTO tbFuncionarios (nome, cpf, rg, ctps, telefone, telefoneSecundario, email, emailCorporativo, senha, dataNascimento, dataAdmissao, fotoPerfil, idCargo) VALUES (:nome, :cpf, :rg, :ctps, :telefone, :telefoneSecundario, :email, :emailCorporativo, :senha, :dataNascimento, :dataAdmissao, :fotoPerfil, :idCargo)";
 
         $dataNascimentoFormatada = $this->dataNascimento->format('Y-m-d');
         $dataAdmissaoFormatada = $this->dataAdmissao->format('Y-m-d');
@@ -97,7 +110,9 @@ class Funcionario {
             $stmt->bindParam(':rg', $this->rg);
             $stmt->bindParam(':ctps', $this->ctps);
             $stmt->bindParam(':telefone', $this->telefone);
+            $stmt->bindParam(':telefoneSecundario', $this->telefoneSecundario);
             $stmt->bindParam(':email', $this->email);
+            $stmt->bindParam(':emailCorporativo', $this->emailCorporativo);
             $stmt->bindParam(':senha', $this->senha);
             $stmt->bindParam(':dataNascimento', $dataNascimentoFormatada);
             $stmt->bindParam(':dataAdmissao', $dataAdmissaoFormatada);
@@ -164,6 +179,18 @@ class Funcionario {
             http_response_code(500);
             return false;
         }
+    }
+
+    private function createEmailCorporativo() {
+
+        $nomeCompleto = explode(' ', $this->nome);
+        $tamanho = count($nomeCompleto);
+
+        $sql = "SELECT COUNT(*) FROM tbFuncionarios";
+        $stmt = Model::getConn()->query($sql);
+        $count = $stmt->fetchColumn(); 
+
+        return strtolower($nomeCompleto[0] . "." . $nomeCompleto[$tamanho-1] . $count . "@carzo.com.br");
     }
 
 }

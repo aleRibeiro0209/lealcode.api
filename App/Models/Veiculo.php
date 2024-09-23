@@ -14,7 +14,7 @@ class Veiculo {
     private string $numeroMotor;
     private string $cor;
     private int $ano;
-    private string $marca;
+    private int $idMarca;
     private int $idCarroceria;
 
     public function constructCar($data): Veiculo {
@@ -28,16 +28,32 @@ class Veiculo {
         $this->numeroMotor = $data->numeroMotor;
         $this->cor = $data->cor;
         $this->ano = $data->ano;
-        $this->marca = $data->marca;
+        $this->idMarca = $data->marca;
         $this->idCarroceria = $data->carroceria;
 
         return $this;
     }
 
     public function findAll($data): array {
-        $sql = "SELECT V.*, C.descricao as carroceria FROM tbVeiculos V INNER JOIN tbCarrocerias C ON V.idCarroceria = C.idCarroceria LIMIT :limite OFFSET :offset";
+        $sql = "SELECT V.*, C.descricao as carroceria, M.descricao as marca
+                FROM tbVeiculos V 
+                INNER JOIN tbCarrocerias C ON V.idCarroceria = C.idCarroceria
+                INNER JOIN tbMarcas M ON V.idMarca = M.idMarca
+                WHERE (:ano IS NULL OR V.ano LIKE CONCAT('%', :ano, '%'))
+                    AND (:modelo IS NULL OR V.modelo LIKE CONCAT('%', :modelo, '%'))
+                    AND (:cor IS NULL OR V.cor LIKE CONCAT('%', :cor, '%'))
+                    AND (:placa IS NULL OR V.placa LIKE CONCAT('%', :placa, '%'))
+                    AND (:carroceria IS NULL OR C.descricao LIKE CONCAT('%', :carroceria, '%'))
+                    AND (:marca IS NULL OR M.descricao LIKE CONCAT('%', :marca, '%'))
+                LIMIT :limite OFFSET :offset";
 
         $stmt = Model::getConn()->prepare($sql);
+        $stmt->bindParam(':ano', $data->ano);
+        $stmt->bindParam(':modelo', $data->modelo);
+        $stmt->bindParam(':cor', $data->cor);
+        $stmt->bindParam(':placa', $data->placa);
+        $stmt->bindParam(':carroceria', $data->carroceria);
+        $stmt->bindParam(':marca', $data->marca);
         $stmt->bindParam(':limite', $data->limite, \PDO::PARAM_INT);
         $stmt->bindParam(':offset', $data->offset, \PDO::PARAM_INT);
         $stmt->execute();
@@ -72,7 +88,7 @@ class Veiculo {
     public function create($data) {
         $this->constructCar($data);
 
-        $sql = "INSERT INTO tbVeiculos (modelo, chassi, placa, renavam, numeroMotor, cor, ano, marca, idCarroceria) VALUES (:modelo, :chassi, :placa, :renavam, :numeroMotor, :cor, :ano, :marca, :idCarroceria)";
+        $sql = "INSERT INTO tbVeiculos (modelo, chassi, placa, renavam, numeroMotor, cor, ano, idMarca, idCarroceria) VALUES (:modelo, :chassi, :placa, :renavam, :numeroMotor, :cor, :ano, :idMarca, :idCarroceria)";
 
         try {
             $stmt = Model::getConn()->prepare($sql);
@@ -83,7 +99,7 @@ class Veiculo {
             $stmt->bindParam(':numeroMotor', $this->numeroMotor);
             $stmt->bindParam(':cor', $this->cor);
             $stmt->bindParam(':ano', $this->ano);
-            $stmt->bindParam(':marca', $this->marca);
+            $stmt->bindParam(':idMarca', $this->idMarca);
             $stmt->bindParam(':idCarroceria', $this->idCarroceria);
 
             if ($stmt->execute()) {
