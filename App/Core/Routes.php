@@ -49,7 +49,7 @@ class Routes {
             'permission' => 1
         );
         
-        $routes['Logins'] = array(
+        $routes['Login'] = array(
             'controller' => 'LoginController',
             'route' => '/login',
             'permission' => 0
@@ -61,6 +61,24 @@ class Routes {
             'permission' => 1
         );
 
+        $routes['Notificacoes'] = array(
+            'controller' => 'Notificacoes',
+            'route' => '/notificacoes',
+            'permission' => 1
+        );
+        
+        $routes['Marcas'] = array(
+            'controller' => 'Marcas',
+            'route' => '/marcas',
+            'permission' => 1
+        );
+
+        $routes['Setores'] = array(
+            'controller' => 'Setores',
+            'route' => '/setores',
+            'permission' => 1
+        );
+        
         $this->setRoutes($routes);
     }
 
@@ -75,7 +93,13 @@ class Routes {
                 
                 switch ($method) {
                     case 'DELETE':
-                        $action = 'destroy';
+                        if (isset($urls[1])) {
+                            $action = 'destroy';
+                        } else {
+                            http_response_code(400);
+                            echo json_encode(['erro' => 'ID é obrigatório para a operação de destroy.']);
+                            return;
+                        }
                         break;
                     case 'GET':
                         isset($urls[1]) ? $action = 'show' : $action = 'index';
@@ -84,7 +108,13 @@ class Routes {
                         $action = 'store';
                         break;
                     case 'PUT':
-                        $action = 'update';
+                        if (isset($urls[1])) {
+                            $action = 'update';
+                        } else {
+                            http_response_code(400);
+                            echo json_encode(['erro' => 'ID é obrigatório para a operação de update.']);
+                            return;
+                        }
                         break;
                     case 'OPTIONS':
                         header("HTTP/1.1 200 OK");

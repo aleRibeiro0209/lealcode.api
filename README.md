@@ -23,16 +23,22 @@ A estrutura do projeto é baseada na arquitetura MVC, organizada da seguinte for
 - **App/Controllers**:
   - `Veiculos.php`: Controlador para gerenciar as operações relacionadas aos veículos.
   - `Carrocerias.php`: Controlador para gerenciar as operações relacionadas às carrocerias.
+  - `Marcas.php`: Controlador para gerenciar as operações relacionadas às marcas.
   - `Cargos.php`: Controlador para gerenciar as operações relacionadas aos cargos.
+  - `Setores.php`: Controlador para gerenciar as operações relacionadas aos setores.
   - `Funcionarios.php`: Controlador para gerenciar as operações relacionadas aos funcionários.
+  - `Notificacoes.php`: Controlador para gerenciar as operações relacionadas as notificações.
   - `LoginController.php`: Controlador responsável pelas operações de autenticação e login.
   - `EstoqueController.php`: Controlador responsável pelas operações de relacionadas ao estoque.
 
 - **App/Models**:
   - `Veiculo.php`: Modelo que representa a tabela de veículos no banco de dados.
   - `Carroceria.php`: Modelo que representa a tabela de carrocerias no banco de dados.
+  - `Marca.php`: Modelo que representa a tabela de marcas no banco de dados.
   - `Cargo.php`: Modelo que representa a tabela de cargos no banco de dados.
+  - `Setor.php`: Modelo que representa a tabela de setores no banco de dados.
   - `Funcionario.php`: Modelo que representa a tabela de funcionários no banco de dados.
+  - `Notificacao.php`: Modelo que representa a tabela de notificações no banco de dados.
   - `Estoque.php`: Modelo que representa a tabela de estoque no banco de dados.
 
 - **App/Middlewares**:
@@ -106,6 +112,14 @@ Todas as rotas da API, exceto a de login, estão protegidas por autenticação b
 - **PUT** `/carrocerias/{id}` - Atualiza as informações de uma carroceria existente.
 - **DELETE** `/carrocerias/{id}` - Remove uma carroceria.
 
+### Marcas
+
+- **GET** `/marcas` - Lista todos os tipos de marcas.
+- **GET** `/marcas/{id}` - Retorna os detalhes de uma marca específica.
+- **POST** `/marcas` - Adiciona uma nova marca.
+- **PUT** `/marcas/{id}` - Atualiza as informações de uma marca existente.
+- **DELETE** `/marcas/{id}` - Remove uma marca.
+
 ### Funcionários
 
 - **GET** `/funcionarios` - Lista todos os funcionários.
@@ -122,11 +136,26 @@ Todas as rotas da API, exceto a de login, estão protegidas por autenticação b
 - **PUT** `/cargos/{id}` - Atualiza as informações de um cargo existente.
 - **DELETE** `/cargos/{id}` - Remove um cargo.
 
+### Setores
+
+- **GET** `/setores` - Lista todos os setores.
+- **GET** `/setores/{id}` - Retorna os detalhes de um cargo específico.
+- **POST** `/setores` - Adiciona um novo cargo.
+- **PUT** `/setores/{id}` - Atualiza as informações de um cargo existente.
+- **DELETE** `/setores/{id}` - Remove um cargo.
+
 ### Estoque
 
 - **GET** `/estoque` - Lista todos os veiculos e seus status no estoque.
 - **GET** `/estoque/{id}` - Retorna os detalhes de um veiculo no estoque em específico.
 - **PUT** `/estoque/{id}` - Atualiza o status de um veiculo existente no estoque.
+
+### Notificações
+
+- **GET** `/notificacoes` - Lista todos os notificações.
+- **GET** `/notificacoes/{id}` - Retorna os detalhes de um notificação específico.
+- **POST** `/notificacoes` - Adiciona um novo notificação.
+- **DELETE** `/notificacoes/{id}` - Remove um notificação.
 
 ## Rotas não Protegidas da API
 

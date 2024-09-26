@@ -7,9 +7,21 @@ use App\Core\Controller;
 class Carrocerias extends Controller {
 
     public function index() {
-        $carroceriaModel = $this->getModel('Carroceria');
-        $carroceriaList = $carroceriaModel->findAll();
+        $solicitacaoParametrizada = new \stdClass;
+        $solicitacaoParametrizada->limite = isset($_GET['limite']) ? (int)$_GET['limite'] : 10;
+        $solicitacaoParametrizada->pagina = isset($_GET['pagina']) && $_GET['pagina'] > 0 ? (int)$_GET['pagina'] : 1;
+        $solicitacaoParametrizada->carroceria = isset($_GET['carroceria']) ? $_GET['carroceria'] : null;
 
+        if ($solicitacaoParametrizada->limite > 0) {
+            $solicitacaoParametrizada->offset = ($solicitacaoParametrizada->pagina - 1) * $solicitacaoParametrizada->limite;
+        } else {
+            $solicitacaoParametrizada->offset = null;
+        }
+        
+        $carroceriaModel = $this->getModel('Carroceria');
+        $carroceriaList = $carroceriaModel->findAll($solicitacaoParametrizada);
+
+        http_response_code(200);
         echo json_encode($carroceriaList);
     }
 

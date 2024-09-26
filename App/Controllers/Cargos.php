@@ -31,14 +31,21 @@ class Cargos extends Controller {
         $novoCargo = $this->getBodyRequest();
         
         $cargoModel = $this->getModel('Cargo');
-        $cargo = $cargoModel->create($novoCargo);
-
-        if ($cargo) {
-            http_response_code(201);
-            echo json_encode($cargo);
+        $setorModel = $this->getModel('Setor');
+        $novoCargo->setor = $setorModel->findId($novoCargo->setor);
+        
+        if ($novoCargo->setor) {
+            $cargo = $cargoModel->create($novoCargo);
+            if ($cargo) {
+                http_response_code(201);
+                echo json_encode($cargo);
+            } else {
+                http_response_code(500);
+                echo json_encode(['erro' => 'Erro ao cadastrar cargo']);
+            }
         } else {
-            http_response_code(500);
-            echo json_encode(['erro' => 'Erro ao cadastrar cargo']);
+            http_response_code(404);
+            echo json_encode(['erro' => 'Setor não cadastrado ou não encontrado']);
         }
     }
 
@@ -46,14 +53,22 @@ class Cargos extends Controller {
         $atualizacaoCargo = $this->getBodyRequest();
 
         $cargoModel = $this->getModel('Cargo');
-        $cargo = $cargoModel->update($id, $atualizacaoCargo);
+        $setorModel = $this->getModel('Setor');
+        $atualizacaoCargo->setor = $setorModel->findId($atualizacaoCargo->setor);
 
-        if ($cargo) {
-            http_response_code(200);
-            echo json_encode($cargo);
+        if($atualizacaoCargo->setor) {
+            $cargoAtualizado =  $cargoModel->update($id, $atualizacaoCargo);
+
+            if ($cargoAtualizado) {
+                http_response_code(200);
+                echo json_encode($cargoAtualizado);
+            } else {
+                http_response_code(404);
+                echo json_encode(['erro' => 'Cargo não encontrado ou não atualizado']);
+            }
         } else {
             http_response_code(404);
-            echo json_encode(['erro' => 'Cargo não encontrado ou não atualizado']);
+            echo json_encode(['erro' => 'Setor não cadastrado ou não encontrado']);
         }
     }
 

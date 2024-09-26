@@ -15,13 +15,36 @@ class Carroceria {
         return $this;
     }
 
-    public function findAll(): array {
-        $sql = "SELECT * FROM tbCarrocerias";
-
-        $stmt = Model::getConn()->prepare($sql);
+    public function findAll($data): array {
+        if ($data->limite > 0) {
+            // Consulta SQL com ordenação e paginação
+            $sql = "SELECT * FROM tbCarrocerias ORDER BY descricao ASC LIMIT :limite OFFSET :offset";
+            $stmt = Model::getConn()->prepare($sql);
+            $stmt->bindParam(':limite', $data->limite, \PDO::PARAM_INT);
+            $stmt->bindParam(':offset', $data->offset, \PDO::PARAM_INT);
+        } else {
+            // Consulta SQL sem limite e offset, retornando todos os registros
+            $sql = "SELECT * FROM tbCarrocerias C WHERE (:carroceria IS NULL OR C.descricao LIKE CONCAT('%', :carroceria, '%')) ORDER BY C.descricao ASC";
+            $stmt = Model::getConn()->prepare($sql);
+            $stmt->bindParam(':carroceria', $data->carroceria);
+        }
+    
+        // Executando a consulta
         $stmt->execute();
-
-        return $stmt->fetchAll(\PDO::FETCH_OBJ);
+        $carrocerias = $stmt->fetchAll(\PDO::FETCH_OBJ);
+    
+        // Consulta para contar o total de registros
+        $sqlCount = "SELECT COUNT(*) FROM tbCarrocerias";
+        $total = Model::getConn()->query($sqlCount)->fetchColumn();
+    
+        // Retornando os dados de paginação e os resultados
+        return [
+            'carrocerias' => $carrocerias,
+            'total' => $total,
+            'paginaAtual' => $data->limite > 0 ? $data->pagina : null,
+            'itensPorPagina' => $data->limite > 0 ? $data->limite : $total,
+            'totalPaginas' => $data->limite > 0 ? ceil($total / $data->limite) : 1
+        ];
     }
 
     public function getId($id) {
@@ -67,7 +90,7 @@ class Carroceria {
             }
         } catch (\PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Não foi possível inserir os dados da Carroceria: ' . $e->getMessage()]);
+            return null;
         }
     }
 
@@ -84,10 +107,8 @@ class Carroceria {
             }
         } catch (\PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Erro ao atualizar a carroceria: ' . $e->getMessage()]);
+            return null;
         }
-
-        return null;
     }
 
     public function delete($id): bool {
@@ -96,10 +117,15 @@ class Carroceria {
         try {
             $stmt = Model::getConn()->prepare($sql);
             $stmt->bindParam(':id', $id);
-            return $stmt->execute();
+            $stmt->execute();
+
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
         } catch (\PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Erro ao deletar a carroceria: ' . $e->getMessage()]);
             return false;
         }
     }

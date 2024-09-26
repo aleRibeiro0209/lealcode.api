@@ -4,15 +4,19 @@ namespace App\Models;
 
 use App\Core\Model;
 
-class Cargo {
+class Marca {
 
-    private int $idCargo;
+    private int $idMarca;
     private string $descricao;
-    private string $permissoes;
-    private int $idSetor;
+
+    private function contructMarca($data): Marca {
+        $this->descricao = $data->descricao;
+
+        return $this;
+    }
 
     public function findAll(): array {
-        $sql = "SELECT * FROM tbCargos";
+        $sql = "SELECT * FROM tbMarcas ORDER BY descricao ASC";
 
         $stmt = Model::getConn()->prepare($sql);
         $stmt->execute();
@@ -20,8 +24,22 @@ class Cargo {
         return $stmt->fetchAll(\PDO::FETCH_OBJ);
     }
 
+    public function getId($id) {
+        $sql = "SELECT * FROM tbMarcas WHERE idMarca = ?";
+
+        $stmt = Model::getConn()->prepare($sql);
+        $stmt->bindValue(1, $id);
+        $stmt->execute();
+
+        if($stmt->rowCount()) {
+            return $stmt->fetch(\PDO::FETCH_OBJ);
+        }
+
+        return null;
+    }
+
     public function findId($descricao) {
-        $sql = "SELECT idCargo FROM tbCargos WHERE descricao = ?";
+        $sql = "SELECT idMarca FROM tbMarcas WHERE descricao = ?";
 
         $stmt = Model::getConn()->prepare($sql);
         $stmt->bindValue(1, $descricao);
@@ -34,50 +52,31 @@ class Cargo {
         }
     }
 
-    public function getId($id) {
-        $sql = "SELECT * FROM tbCargos WHERE idCargo = :id";
+    public function create($data): ?Marca {
+        $this->contructMarca($data);
 
-        $stmt = Model::getConn()->prepare($sql);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
-
-        return $stmt->fetch(\PDO::FETCH_OBJ);
-    }
-
-    public function create($data): ?Cargo {
-        $this->descricao = $data->descricao;
-        $this->permissoes = $data->permissoes;
-        $this->idSetor = $data->setor;
-
-        $sql = "INSERT INTO tbCargos (descricao, permissoes, idSetor) VALUES (:descricao, :permissoes, :idSetor)";
+        $sql = "INSERT INTO tbMarcas (descricao) VALUES (:descricao)";
 
         try {
             $stmt = Model::getConn()->prepare($sql);
-            $stmt->bindParam(":descricao", $this->descricao);
-            $stmt->bindParam(":permissoes", $this->permissoes);
-            $stmt->bindParam(":idSetor", $this->idSetor);
-            
+            $stmt->bindParam(':descricao', $this->descricao);
+
             if ($stmt->execute()) {
-                $this->idCargo = Model::getLastId('idCargo', 'tbCargos');
+                $this->idMarca = Model::getLastId('idMarca', 'tbMarcas');
                 return $this;
             }
-
         } catch (\PDOException $e) {
             http_response_code(500);
             return null;
         }
-
-        return null;
     }
 
     public function update($id, $data) {
-        $sql = "UPDATE tbCargos SET descricao = :descricao, permissoes = :permissoes, idSetor = :idSetor WHERE idCargo = :id";
+        $sql = "UPDATE tbMarcas SET descricao = :descricao WHERE idMarca = :id";
 
         try {
             $stmt = Model::getConn()->prepare($sql);
             $stmt->bindParam(':descricao', $data->descricao);
-            $stmt->bindParam(':permissoes', $data->permissoes);
-            $stmt->bindParam(':idSetor', $data->setor);
             $stmt->bindParam(':id', $id);
 
             if($stmt->execute()) {
@@ -87,12 +86,10 @@ class Cargo {
             http_response_code(500);
             return null;
         }
-
-        return null;
     }
 
     public function delete($id): bool {
-        $sql =  "DELETE FROM tbCargos WHERE idCargo = :id";
+        $sql =  "DELETE FROM tbMarcas WHERE idMarca = :id";
 
         try {
             $stmt = Model::getConn()->prepare($sql);
