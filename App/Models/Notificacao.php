@@ -13,8 +13,7 @@ class Notificacao {
     private int $idVeiculo;
 
     public function findAll($data) {
-        $sql = "SELECT * FROM tbNotificacoes WHERE (dataHora BETWEEN :dataInicial AND :dataFinal 
-               OR (:dataInicial IS NULL AND :dataFinal IS NULL)) ORDER BY idNotificacao DESC";
+        $sql = "SELECT * FROM tbNotificacoes WHERE (dataHora BETWEEN :dataInicial AND :dataFinal OR (:dataInicial IS NULL AND :dataFinal IS NULL)) ORDER BY dataHora DESC";
 
         $stmt = Model::getConn()->prepare($sql);
         $stmt->bindParam(':dataInicial', $data->dataInicial);
