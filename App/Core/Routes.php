@@ -78,6 +78,12 @@ class Routes {
             'route' => '/setores',
             'permission' => 1
         );
+
+        $routes['Relatorios'] = array(
+            'controller' => 'Relatorios',
+            'route' => '/relatorios',
+            'permission' => 0
+        );
         
         $this->setRoutes($routes);
     }

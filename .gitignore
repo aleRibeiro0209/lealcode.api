@@ -4,3 +4,4 @@ composer.lock
 
 # Pastas
 vendor/
+uploads/

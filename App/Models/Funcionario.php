@@ -30,8 +30,6 @@ class Funcionario {
         if (isset($data->dataCadastro)) {
             $this->dataCadastro = new \DateTime($data->dataCadastro);
         }
-
-
         
         $this->nome = $data->nome;
         $this->cpf = $data->cpf;
@@ -121,7 +119,7 @@ class Funcionario {
             
             if ($stmt->execute()) {
                 $this->idFuncionario = Model::getLastId('idFuncionario', 'tbFuncionarios');
-                return $this;
+                return $this->getId($this->idFuncionario);
             }
 
         } catch (\PDOException $e) {
