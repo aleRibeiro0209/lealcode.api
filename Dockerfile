@@ -7,7 +7,11 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     git \
-    && docker-php-ext-install curl pdo pdo_mysql
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-png \
+    && docker-php-ext-install gd curl pdo pdo_mysql
 
 # Aumentar a memória do PHP para ilimitada
 RUN echo "memory_limit = -1" > /usr/local/etc/php/conf.d/memory-limit.ini
