@@ -1,21 +1,20 @@
 # Use uma imagem base com PHP 8.3 e Apache
 FROM php:8.3-apache
 
-# Instalar dependências do sistema, incluindo libonig-dev para mbstring
+# Instalar dependências do sistema e extensões PHP
 RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
-    libonig-dev \   # Dependência necessária para mbstring
+    libonig-dev \  # Dependência necessária para mbstring
     zip \
     unzip \
     git \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Instalar as extensões PHP necessárias, incluindo mbstring
-RUN docker-php-ext-install gd curl pdo pdo_mysql fileinfo mbstring \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Instalar as extensões PHP necessárias
+RUN docker-php-ext-install gd curl pdo pdo_mysql fileinfo mbstring
 
 # Aumentar a memória do PHP para ilimitada
 RUN echo "memory_limit = -1" > /usr/local/etc/php/conf.d/memory-limit.ini
