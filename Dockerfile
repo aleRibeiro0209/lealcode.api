@@ -1,7 +1,7 @@
 # Use uma imagem base com PHP 8.3 e Apache
 FROM php:8.3-apache
 
-# Instalar extensões necessárias (curl, pdo_mysql, gd, fileinfo, mbstring) e utilitários
+# Etapa 1: Instalar utilitários e dependências para extensões PHP
 RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev \
     zip \
@@ -10,8 +10,15 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd curl pdo pdo_mysql fileinfo mbstring \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Etapa 2: Configurar e instalar a extensão GD com suporte a FreeType e JPEG
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Etapa 3: Instalar extensões adicionais (curl, pdo, pdo_mysql, fileinfo, mbstring)
+RUN docker-php-ext-install curl pdo pdo_mysql fileinfo mbstring \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Aumentar a memória do PHP para ilimitada
