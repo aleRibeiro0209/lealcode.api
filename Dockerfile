@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-install curl pdo pdo_mysql
 
 # Etapa 2: Configurar e instalar a extensão GD separadamente
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-png \
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd
 
 # Limpar o cache do apt para reduzir o tamanho da imagem
