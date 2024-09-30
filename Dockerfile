@@ -2,12 +2,26 @@
 FROM php:8.3-apache
 
 # Instalar extensões necessárias (curl, pdo_mysql) e utilitários
+# Etapa 1: Instalar dependências gerais
 RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev \
     zip \
     unzip \
     git \
-    && docker-php-ext-install curl pdo pdo_mysql
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev
+
+# Etapa 3: Instalar o curl, pdo e pdo_mysql
+RUN docker-php-ext-install curl pdo pdo_mysql
+
+# Etapa 2: Configurar e instalar a extensão GD separadamente
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-png \
+    && docker-php-ext-install gd
+
+# Limpar o cache do apt para reduzir o tamanho da imagem
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
 
 # Aumentar a memória do PHP para ilimitada
 RUN echo "memory_limit = -1" > /usr/local/etc/php/conf.d/memory-limit.ini
