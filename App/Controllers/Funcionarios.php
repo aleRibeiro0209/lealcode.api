@@ -41,6 +41,9 @@ class Funcionarios extends Controller {
             $novoFuncionario->fotoPerfil = $uploader->uploadBase64File($novoFuncionario->fileData, $novoFuncionario->fileName, $novoFuncionario->fileType);
         }
 
+        echo json_encode(['url' => $novoFuncionario->fotoPerfil]);
+        exit;
+
         if ($novoFuncionario->cargo) {
             $funcionarioObj = $funcionarioModel->create($novoFuncionario);
             
