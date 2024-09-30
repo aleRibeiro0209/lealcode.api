@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Core\FileUploader;
 
 class Funcionarios extends Controller {
 
@@ -34,10 +35,22 @@ class Funcionarios extends Controller {
         $cargoModel = $this->getModel('Cargo');
         $novoFuncionario->cargo = $cargoModel->findId($novoFuncionario->cargo);
 
+        if($novoFuncionario->fileName && $novoFuncionario->fileData) {
+            $uploader = new FileUploader('funcionarios/');
+
+            $novoFuncionario->fotoPerfil = $uploader->uploadBase64File($novoFuncionario->fileData, $novoFuncionario->fileName, $novoFuncionario->fileType);
+        }
+
         if ($novoFuncionario->cargo) {
             $funcionarioObj = $funcionarioModel->create($novoFuncionario);
-            http_response_code(201);
-            echo json_encode($funcionarioObj);
+            
+            if ($funcionarioObj) {
+                http_response_code(201);
+                echo json_encode(['funcionario' => $funcionarioObj, 'message' => 'Funcionário cadastrado com sucesso']);
+            } else {
+                http_response_code(500);
+                echo json_encode(['erro' => 'Erro ao cadastrar funcionário']);
+            }
         } else {
             http_response_code(404);
             echo json_encode(['erro' => 'Cargo não cadastrado ou não encontrado']);
