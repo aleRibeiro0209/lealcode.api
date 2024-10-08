@@ -80,4 +80,30 @@ class Relatorio {
         return ['dadosRelatorio' => $dados, 'colunas' => $nomeColunas];
     }
 
+    public function relatorioVendas($data) {
+        $sql = "SELECT Func.idFuncionario as 'Matrícula', Func.nome as 'Nome', Func.cpf as 'CPF', CONCAT(Func.telefone, ' ', Func.email) as 'Contatos', 
+        DATE_FORMAT(Func.dataNascimento, '%d/%m/%Y') as 'Data de Nascimento',  DATE_FORMAT(Func.dataAdmissao, '%d/%m/%Y') as 'Data de Admissão', Setor.descricao as Setor
+        FROM tbFuncionarios Func 
+        INNER JOIN tbCargos Carg
+        ON Func.idCargo = Carg.idCargo
+        INNER JOIN tbSetores Setor
+        ON Carg.idSetor = Setor.idSetor";
+
+        $stmt = Model::getConn()->prepare($sql);
+        $stmt->execute();
+
+        $dados = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        // Pegar os metadados das colunas
+        $columnCount = $stmt->columnCount();
+        $nomeColunas = [];
+
+        for ($i = 0; $i < $columnCount; $i++) {
+            $columnMeta = $stmt->getColumnMeta($i);
+            $nomeColunas[] = $columnMeta['name'];
+        }
+
+        return ['dadosRelatorio' => $dados, 'colunas' => $nomeColunas];
+    }
+
 }

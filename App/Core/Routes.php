@@ -85,6 +85,18 @@ class Routes {
             'permission' => 0
         );
         
+        $routes['Vendas'] = array(
+            'controller' => 'Vendas',
+            'route' => '/vendas',
+            'permission' => 0
+        );
+        
+        $routes['Clientes'] = array(
+            'controller' => 'Clientes',
+            'route' => '/clientes',
+            'permission' => 0
+        );
+        
         $this->setRoutes($routes);
     }
 
