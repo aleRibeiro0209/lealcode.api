@@ -93,7 +93,7 @@ class Funcionario {
         }
     }
 
-    public function create($data): ?Funcionario {
+    public function create($data) {
         $this->constructFunc($data);
 
         $sql = "INSERT INTO tbFuncionarios (nome, cpf, rg, ctps, telefone, telefoneSecundario, email, emailCorporativo, senha, dataNascimento, dataAdmissao, fotoPerfil, idCargo) VALUES (:nome, :cpf, :rg, :ctps, :telefone, :telefoneSecundario, :email, :emailCorporativo, :senha, :dataNascimento, :dataAdmissao, :fotoPerfil, :idCargo)";

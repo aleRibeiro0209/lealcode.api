@@ -81,15 +81,26 @@ class Relatorio {
     }
 
     public function relatorioVendas($data) {
-        $sql = "SELECT Func.idFuncionario as 'Matrícula', Func.nome as 'Nome', Func.cpf as 'CPF', CONCAT(Func.telefone, ' ', Func.email) as 'Contatos', 
-        DATE_FORMAT(Func.dataNascimento, '%d/%m/%Y') as 'Data de Nascimento',  DATE_FORMAT(Func.dataAdmissao, '%d/%m/%Y') as 'Data de Admissão', Setor.descricao as Setor
-        FROM tbFuncionarios Func 
-        INNER JOIN tbCargos Carg
-        ON Func.idCargo = Carg.idCargo
-        INNER JOIN tbSetores Setor
-        ON Carg.idSetor = Setor.idSetor";
+        $sql = "SELECT  CONCAT(Func.idFuncionario, ' ', Func.nome) as 'Funcionário', 
+                        CONCAT(Cli.nome, ' ', Cli.telefone) as 'Cliente',
+                        CONCAT(Veic.placa, ' ', Veic.modelo) as 'Veiculo',
+                        Ven.formaPagamento as 'Pagamento',
+                        CONCAT('R$', Ven.valorEntrada) as 'Entrada',
+                        CONCAT('R$', Ven.valorTotal) as 'Total',
+                        DATE_FORMAT(Ven.dataVenda, '%d/%m/%Y') as 'Data da Venda'
+        FROM tbVendas Ven 
+        INNER JOIN tbClientes Cli
+            ON Ven.idCliente = Cli.idCliente
+        INNER JOIN tbFuncionarios Func
+            ON Ven.idFuncionario = Func.idFuncionario
+        INNER JOIN tbVeiculos Veic
+            ON Ven.idVeiculo = Veic.idVeiculo
+        WHERE Ven.dataVenda BETWEEN :dataInicial AND :dataFinal
+        ORDER BY Ven.dataVenda DESC";
 
         $stmt = Model::getConn()->prepare($sql);
+        $stmt->bindParam(':dataInicial', $data->dataInicial);
+        $stmt->bindParam(':dataFinal', $data->dataFinal);
         $stmt->execute();
 
         $dados = $stmt->fetchAll(\PDO::FETCH_ASSOC);
